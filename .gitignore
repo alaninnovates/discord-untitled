@@ -1,0 +1,15 @@
+# Packages
+node_modules/
+
+# Log files
+logs/
+*.log
+
+# Authentication
+
+# Test files
+
+# Miscellaneous
+.tmp/
+.vscode/
+package-lock.json
