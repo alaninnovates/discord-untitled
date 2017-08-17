@@ -120,7 +120,7 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * @param {BaseCommand[]|Function[]} commands - An array of Command instances or constructors
 	 * @return {CommandRegistry}
 	 */
-	registerCommands(commands: BaseCommand[] | ((client: UntitledClient) => BaseCommand)[]): CommandRegistry {
+	public registerCommands(commands: BaseCommand[] | ((client: UntitledClient) => BaseCommand)[]): CommandRegistry {
 		if (!Array.isArray(commands)) throw new TypeError('Commands must be an Array.');
 		for (let command of commands) {
 			if (typeof command === 'function') command = command(this.client);
@@ -290,15 +290,15 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 
 	/**
 	 * Registers the default argument types to the registry. These are:
-	 * - string
-	 * - integer
-	 * - float
-	 * - boolean
-	 * - user
-	 * - member
-	 * - role
-	 * - channel
-	 * - message
+	 * * string
+	 * * integer
+	 * * float
+	 * * boolean
+	 * * user
+	 * * member
+	 * * role
+	 * * channel
+	 * * message
 	 * @return {CommandRegistry}
 	 */
 	public registerDefaultTypes(): CommandRegistry {
@@ -373,7 +373,7 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * @param {Object} obj - An object of keys: values
 	 * @return {CommandRegistry}
 	 */
-	registerEvalObjects(obj: object): CommandRegistry {
+	public registerEvalObjects(obj: object): CommandRegistry {
 		Object.assign(this.evalObjects, obj);
 		return this;
 	}
@@ -406,7 +406,7 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * @param {CommandGroupResolvable} group - The group to resolve
 	 * @return {BaseCommandGroup} The resolved CommandGroup
 	 */
-	resolveGroup(group: CommandGroupResolvable): BaseCommandGroup {
+	public resolveGroup(group: CommandGroupResolvable): BaseCommandGroup {
 		if (group instanceof BaseCommandGroup) return group;
 		if (typeof group === 'string') {
 			const groups: BaseCommandGroup[] | Collection<string, BaseCommandGroup> = this.findGroups(group, true);

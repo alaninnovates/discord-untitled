@@ -65,7 +65,7 @@ export class BaseCommandGroup<T extends UntitledClient = UntitledClient> {
 	 * @param {?GuildResolvable} guild - Guild to enable/disable the group in
 	 * @param {boolean} enabled - Whether the group should be enabled or disabled
 	 */
-	setEnabledIn(guild: GuildResolvable, enabled: boolean): void {
+	public setEnabledIn(guild: GuildResolvable, enabled: boolean): void {
 		if (typeof guild === 'undefined') throw new TypeError('Guild must not be undefined.');
 		if (typeof enabled === 'undefined') throw new TypeError('Enabled must not be undefined.');
 		if (this.guarded) throw new Error('The group is guarded.');
@@ -83,7 +83,7 @@ export class BaseCommandGroup<T extends UntitledClient = UntitledClient> {
 	 * @param {?GuildResolvable} guild - Guild to check in
 	 * @return {boolean} Whether or not the group is enabled
 	 */
-	isEnabledIn(guild: GuildResolvable): boolean {
+	public isEnabledIn(guild: GuildResolvable): boolean {
 		if (this.guarded) return true;
 		if (!guild) return this._globalEnabled;
 		guild = (this as any).client.resolver.resolveGuild(guild);
@@ -93,7 +93,7 @@ export class BaseCommandGroup<T extends UntitledClient = UntitledClient> {
 	/**
 	 * Reloads all of the group's commands
 	 */
-	reload(): void {
+	public reload(): void {
 		for (const command of this.commands.values()) command.reload();
 	}
 }

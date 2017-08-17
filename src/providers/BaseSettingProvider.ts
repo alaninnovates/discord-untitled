@@ -58,7 +58,7 @@ export abstract class BaseSettingProvider {
 	 * @return {Promise<*>} New value of the setting
 	 * @abstract
 	 */
-	set(guild: Guild | Snowflake, key: string, val: any): Promise<any> {
+	public set(guild: Guild | Snowflake, key: string, val: any): Promise<any> {
 		throw new Error(`${this.constructor.name} doesn't have a set method.`);
 	}
 
@@ -69,7 +69,7 @@ export abstract class BaseSettingProvider {
 	 * @return {Promise<*>} Old value of the setting
 	 * @abstract
 	 */
-	remove(guild: Guild | Snowflake, key: string): Promise<any> {
+	public remove(guild: Guild | Snowflake, key: string): Promise<any> {
 		throw new Error(`${this.constructor.name} doesn't have a remove method.`);
 	}
 
@@ -79,7 +79,7 @@ export abstract class BaseSettingProvider {
 	 * @return {Promise<void>}
 	 * @abstract
 	 */
-	clear(guild: Guild | Snowflake): Promise<void> {
+	public clear(guild: Guild | Snowflake): Promise<void> {
 		throw new Error(`${this.constructor.name} doesn't have a clear method.`);
 	}
 }

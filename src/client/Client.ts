@@ -94,12 +94,12 @@ export class UntitledClient extends Client {
 	 * @type {string}
 	 * @emits {@link UntitledClient#commandPrefixChange}
 	 */
-	get commandPrefix(): string {
+	public get commandPrefix(): string {
 		if (typeof this._commandPrefix === 'undefined' || this._commandPrefix === null) return this.options.commandPrefix;
 		return this._commandPrefix;
 	}
 
-	set commandPrefix(prefix: string) {
+	public set commandPrefix(prefix: string) {
 		this._commandPrefix = prefix;
 		this.emit('commandPrefixChange', null, this._commandPrefix);
 	}
@@ -111,7 +111,7 @@ export class UntitledClient extends Client {
 	 * @type {?Array<User>}
 	 * @readonly
 	 */
-	get owners(): User[] {
+	public get owners(): User[] {
 		if (!this.options.owner) return null;
 		if (typeof this.options.owner === 'string') return [this.users.get(this.options.owner)];
 		const owners: User[] = [];
@@ -124,7 +124,7 @@ export class UntitledClient extends Client {
 	 * @param {UserResolvable} user - User to check for ownership
 	 * @return {boolean}
 	 */
-	isOwner(user: UserResolvable): boolean {
+	public isOwner(user: UserResolvable): boolean {
 		if (!this.options.owner) return false;
 		user = (this as any).resolver.resolveUser(user);
 		if (!user) throw new RangeError('Unable to resolve user.');
@@ -139,7 +139,7 @@ export class UntitledClient extends Client {
 	 * @param {BaseSettingProvider} provider Provider to use
 	 * @return {Promise<void>}
 	 */
-	async setProvider(provider: BaseSettingProvider): Promise<void> {
+	public async setProvider(provider: BaseSettingProvider): Promise<void> {
 		provider = await provider;
 		this.provider = provider;
 
@@ -162,7 +162,7 @@ export class UntitledClient extends Client {
 		return undefined;
 	}
 
-	async destroy(): Promise<void> {
+	private async destroy(): Promise<void> {
 		super.destroy().then(() => this.provider ? this.provider.destroy() : undefined);
 	}
 }

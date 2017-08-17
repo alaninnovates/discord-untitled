@@ -43,7 +43,7 @@ export class GuildSettingsHelper<T extends UntitledClient = UntitledClient> {
 	 * @return {Promise<*>} New value of the setting
 	 * @see {@link SettingProvider#set}
 	 */
-	set(key: string, val: any): Promise<any> {
+	public set(key: string, val: any): Promise<any> {
 		if (!this.client.provider) throw new Error('No settings provider is available.');
 		return this.client.provider.set(this.guild, key, val);
 	}

@@ -150,7 +150,7 @@ export class GuildExtension<T extends UntitledClient = UntitledClient> extends G
 	 * @param {CommandGroupResolvable} group - Group to check status of
 	 * @return {boolean}
 	 */
-	isGroupEnabled(group: CommandGroupResolvable): boolean {
+	public isGroupEnabled(group: CommandGroupResolvable): boolean {
 		group = this.client.registry.resolveGroup(group);
 		if (group.guarded) return true;
 		if (!this._groupsEnabled || typeof this._groupsEnabled[group.id] === 'undefined') return group._globalEnabled;
@@ -163,7 +163,7 @@ export class GuildExtension<T extends UntitledClient = UntitledClient> extends G
 	 * @param {User} [user=this.client.user] - User to use for the mention command format
 	 * @return {string}
 	 */
-	commandUsage(command?: string, user: User = this.client.user): string {
+	public commandUsage(command?: string, user: User = this.client.user): string {
 		return BaseCommand.usage(command, this.commandPrefix, user);
 	}
 }

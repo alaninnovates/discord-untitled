@@ -254,7 +254,12 @@ export class SequelizeProivder<T extends UntitledClient = UntitledClient> extend
 		val = typeof val !== 'undefined' ? JSON.stringify(val) : 'undefined';
 		this.client.shard.broadcastEval(`
 			if (this.shard.id !== ${this.client.shard.id} && this.provider && this.provider.settings) {
-				this.provider.settings.global[${key}] = ${val};
+				let global = this.provider.settings.get('global');
+				if (!global) {
+					global = {};
+					this.provider.settings.set('global', global);
+				}
+				global[${key}] = ${val};
 			}
 		`);
 	}

@@ -296,7 +296,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @param {BaseMessage} message - The triggering command message
 	 * @return {boolean|string} Whether the user has permission, or an error message to respond with if they don't
 	 */
-	hasPermission(message: BaseMessage): boolean | string {
+	public hasPermission(message: BaseMessage): boolean | string {
 		return true;
 	}
 
@@ -312,7 +312,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @return {Promise<?Message|?Array<Message>>}
 	 * @abstract
 	 */
-	async run(message: BaseMessage, args: object | string | string[], fromPattern: boolean): Promise<Message | Message[]> {
+	public async run(message: BaseMessage, args: object | string | string[], fromPattern: boolean): Promise<Message | Message[]> {
 		throw new Error(`${this.constructor.name} doesn't have a run() method.`);
 	}
 
@@ -322,7 +322,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @return {?Object}
 	 * @private
 	 */
-	throttle(userID: Snowflake): object {
+	private throttle(userID: Snowflake): object {
 		if (!this.throttling || this.client.isOwner(userID)) return null;
 
 		let throttle: Throttle = this._throttles.get(userID);
@@ -345,7 +345,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @param {?GuildResolvable} guild - Guild to enable/disable the command in
 	 * @param {boolean} enabled - Whether the command should be enabled or disabled
 	 */
-	setEnabledIn(guild: GuildResolvable, enabled: boolean) {
+	public setEnabledIn(guild: GuildResolvable, enabled: boolean) {
 		if (typeof guild === 'undefined') throw new TypeError('Guild must not be undefined.');
 		if (typeof enabled === 'undefined') throw new TypeError('Enabled must not be undefined.');
 		if (this.guarded) throw new Error('The command is guarded.');
@@ -363,7 +363,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @param {?GuildResolvable} guild - Guild to check in
 	 * @return {boolean}
 	 */
-	isEnabledIn(guild: GuildResolvable): boolean {
+	public isEnabledIn(guild: GuildResolvable): boolean {
 		if (this.guarded) return true;
 		if (!guild) return this.group._globalEnabled && this._globalEnabled;
 		guild = (this as any).client.resolver.resolveGuild(guild);
@@ -375,7 +375,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @param {?BaseMessage} message - The message
 	 * @return {boolean}
 	 */
-	isUsable(message: BaseMessage = null): boolean {
+	public isUsable(message: BaseMessage = null): boolean {
 		if (!message) return this._globalEnabled;
 		if (this.guildOnly && message && !message.guild) return false;
 		const hasPermission: string | boolean = this.hasPermission(message);
@@ -389,14 +389,14 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @param {User} [user=this.client.user] - User to use for the mention command format
 	 * @return {string}
 	 */
-	usage(argString: string, prefix: string = this.client.commandPrefix, user: User = this.client.user): string {
+	public usage(argString: string, prefix: string = this.client.commandPrefix, user: User = this.client.user): string {
 		return (this.constructor as typeof BaseCommand).usage(`${this.name}${argString ? ` ${argString}` : ''}`, prefix, user);
 	}
 
 	/**
 	 * Reloads the command
 	 */
-	reload(): void {
+	public reload(): void {
 		let cmdPath: string;
 		let cached: string;
 		let newCmd: BaseCommand<UntitledClient>;
@@ -424,7 +424,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	/**
 	 * Unloads the command
 	 */
-	unload(): void {
+	public unload(): void {
 		const cmdPath: string = this.client.registry.resolveCommandPath(this.groupID, this.memberName);
 		if (!require.cache[cmdPath]) throw new Error('Command cannot be unloaded.');
 		delete require.cache[cmdPath];
