@@ -1,5 +1,4 @@
-import { UntitledClient, BaseArgument, BaseCommand, BaseCommandGroup, BaseMessage } from '../';
-import { BaseArgumentType } from '../types/BaseType';
+import { UntitledClient, BaseArgument, BaseArgumentType, BaseCommand, BaseCommandGroup, BaseMessage } from '../';
 import { Collection, Message } from 'discord.js';
 import * as path from 'path';
 
