@@ -1,20 +1,19 @@
-import { UntitledClient, BaseMessage } from '../';
-import { BaseArgumentType } from '../types/BaseType';
+import { UntitledClient, BaseArgumentType, BaseMessage } from '../';
 import { Collection, Message, Util } from 'discord.js';
 import { oneLine, stripIndents } from 'common-tags';
 
 export type ArgumentInfo = {
 	key: string;
-	label: string;
+	label?: string;
 	prompt: string;
-	type: string;
-	max: number;
-	min: number;
-	default: any;
-	infinite: boolean;
-	validate: (val: string, msg: BaseMessage) => any | Promise<any>;
-	parse: (val: string, msg: BaseMessage) => any | Promise<any>;
-	wait: number;
+	type?: string;
+	max?: number;
+	min?: number;
+	default?: any;
+	infinite?: boolean;
+	validate?: (val: string, msg?: BaseMessage) => any | Promise<any>;
+	parse?: (val: string, msg?: BaseMessage) => any | Promise<any>;
+	wait?: number;
 };
 
 export type ArgumentResult = {
@@ -26,16 +25,16 @@ export type ArgumentResult = {
 
 export class BaseArgument {
 	public key: string;
-	public label: string;
+	public label?: string;
 	public prompt: string;
 	public type?: BaseArgumentType;
 	public max?: number;
 	public min?: number;
 	public default?: any;
-	public infinite: boolean;
-	public validator?: (val: string, msg: BaseMessage) => any | Promise<any>;
-	public parser?: (val: string, msg: BaseMessage) => any | Promise<any>;
-	public wait: number;
+	public infinite?: boolean;
+	public validator?: (val: string, msg?: BaseMessage) => any | Promise<any>;
+	public parser?: (val: string, msg?: BaseMessage) => any | Promise<any>;
+	public wait?: number;
 
 	/**
 	 * Validates the constructor parameters

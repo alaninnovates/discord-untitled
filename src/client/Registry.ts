@@ -276,12 +276,12 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 		if (eval_) this.registerCommand(require('./commands/util/eval'));
 		if (commandState) {
 			this.registerCommands([
-				require('./commands/commands/groups'),
-				require('./commands/commands/enable'),
-				require('./commands/commands/disable'),
-				require('./commands/commands/reload'),
-				require('./commands/commands/load'),
-				require('./commands/commands/unload')
+				require('../commands/commands/disable'),
+				require('../commands/commands/enable'),
+				require('../commands/commands/groups'),
+				require('../commands/commands/load'),
+				require('../commands/commands/reload'),
+				require('../commands/commands/unload')
 			]);
 		}
 		return this;

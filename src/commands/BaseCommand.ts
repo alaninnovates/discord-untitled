@@ -345,7 +345,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @param {?GuildResolvable} guild - Guild to enable/disable the command in
 	 * @param {boolean} enabled - Whether the command should be enabled or disabled
 	 */
-	public setEnabledIn(guild: GuildResolvable, enabled: boolean) {
+	public setEnabledIn(guild: GuildResolvable, enabled: boolean): void {
 		if (typeof guild === 'undefined') throw new TypeError('Guild must not be undefined.');
 		if (typeof enabled === 'undefined') throw new TypeError('Enabled must not be undefined.');
 		if (this.guarded) throw new Error('The command is guarded.');

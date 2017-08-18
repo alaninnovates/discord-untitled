@@ -776,7 +776,7 @@ export class BaseMessage<T extends UntitledClient = UntitledClient> {
 	 * @see {@link Message#edit}
 	 * @readonly
 	 */
-	public edit(content: StringResolvable, options: MessageOptions): Promise<Message> {
+	public edit(content: StringResolvable, options?: MessageOptions): Promise<Message> {
 		return this.message.edit(content, options);
 	}
 
