@@ -4,7 +4,7 @@ import { Collection, Message } from 'discord.js';
 
 export class DisableCommandCommand<T extends UntitledClient = UntitledClient> extends BaseCommand {
 	public readonly client: T;
-	public constructor(client: UntitledClient) {
+	public constructor(client: T) {
 		super(client, {
 			name: 'disable',
 			aliases: ['disable-command', 'cmd-off', 'command-off'],

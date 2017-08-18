@@ -2,8 +2,9 @@ import { UntitledClient, BaseArgument, BaseArgumentType, BaseMessage } from '../
 
 export class StringArgumentType<T extends UntitledClient = UntitledClient> extends BaseArgumentType {
 	public readonly client: T;
-	public constructor() {
-		super('string');
+
+	public constructor(client: T) {
+		super(client, 'string');
 	}
 
 	public validate(value: string, msg: BaseMessage, arg: BaseArgument): boolean {

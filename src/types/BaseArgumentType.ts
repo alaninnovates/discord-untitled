@@ -8,7 +8,7 @@ export abstract class BaseArgumentType<T extends UntitledClient = UntitledClient
 	/**
 	 * @param {string} id - The argument type ID (this is what you specify in {@link ArgumentInfo#type})
 	 */
-	public constructor(id: string) {
+	public constructor(client: T, id: string) {
 		if (typeof id !== 'string') throw new Error('Argument type ID must be a string.');
 		if (id !== id.toLowerCase()) throw new Error('Argument type ID must be lowercase.');
 
@@ -18,7 +18,7 @@ export abstract class BaseArgumentType<T extends UntitledClient = UntitledClient
 		 * @type {UntitledClient}
 		 * @readonly
 		 */
-		this.client = null;
+		this.client = client;
 
 		/**
 		 * ID of this argument type (this is what you specify in {@link ArgumentInfo#type})

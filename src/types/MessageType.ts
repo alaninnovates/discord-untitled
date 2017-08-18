@@ -3,8 +3,9 @@ import { Message } from 'discord.js';
 
 export class MessageArgumentType<T extends UntitledClient = UntitledClient> extends BaseArgumentType {
 	public readonly client: T;
-	public constructor() {
-		super('message');
+
+	public constructor(client: T) {
+		super(client, 'message');
 	}
 
 	public async validate(value: string, msg: BaseMessage): Promise<boolean> {

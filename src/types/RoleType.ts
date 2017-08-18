@@ -3,8 +3,9 @@ import { Role, Util } from 'discord.js';
 
 export class RoleArgumentType<T extends UntitledClient = UntitledClient> extends BaseArgumentType {
 	public readonly client: T;
-	public constructor() {
-		super('role');
+
+	public constructor(client: T) {
+		super(client, 'role');
 	}
 
 	public validate(value: string, msg: BaseMessage): boolean | string {

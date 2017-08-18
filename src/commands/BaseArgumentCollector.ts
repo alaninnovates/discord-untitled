@@ -18,7 +18,7 @@ export class BaseArgumentCollector<T extends UntitledClient = UntitledClient> {
 	 * @param {ArgumentInfo[]} args - Arguments for the collector
 	 * @param {number} [promptLimit=Infinity] - Maximum number of times to prompt for a single argument
 	 */
-	public constructor(args: ArgumentInfo[], promptLimit: number = Infinity) {
+	public constructor(client: T, args: ArgumentInfo[], promptLimit: number = Infinity) {
 		if (!args || !Array.isArray(args)) throw new TypeError('Collector args must be an Array.');
 		if (promptLimit === null) promptLimit = Infinity;
 
@@ -28,7 +28,7 @@ export class BaseArgumentCollector<T extends UntitledClient = UntitledClient> {
 		 * @type {UntitledClient}
 		 * @readonly
 		 */
-		this.client = null;
+		this.client = client;
 
 		/**
 		 * Arguments the collector handles

@@ -1,6 +1,14 @@
-import { UntitledClient, BaseArgument, BaseArgumentType, BaseCommand, BaseCommandGroup, BaseMessage } from '../';
+import {
+	UntitledClient,
+	BaseArgument,
+	BaseArgumentType,
+	BaseCommand,
+	BaseCommandGroup,
+	BaseMessage
+} from '../';
 import { Collection, Message } from 'discord.js';
 import * as path from 'path';
+import * as util from 'util';
 
 export type CommandResolvable = BaseCommand | BaseMessage | string;
 
@@ -14,14 +22,14 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	public evalObjects: object;
 	public commandsPath?: string;
 
-	public constructor() {
+	public constructor(client: T) {
 		/**
 		 * The client this registry is for
 		 * @name CommandRegistry#client
 		 * @type {UntitledClient}
 		 * @readonly
 		 */
-		this.client = null;
+		this.client = client;
 
 		/**
 		 * Registered commands
@@ -62,7 +70,7 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * @return {CommandRegistry}
 	 * @see {@link CommandRegistry#registerGroups}
 	 */
-	public registerGroup(group: BaseCommandGroup | (() => BaseCommandGroup) | string[] | string, name?: string): CommandRegistry {
+	public registerGroup(group: BaseCommandGroup | ((client: T) => BaseCommandGroup) | string[] | string, name?: string): CommandRegistry {
 		if (typeof group === 'string') return this.registerGroups([[group, name]]);
 		return this.registerGroups([(group as BaseCommandGroup)]);
 	}
@@ -73,32 +81,37 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * or arrays of [ID, Name]
 	 * @return {CommandRegistry}
 	 */
-	public registerGroups(groups: BaseCommandGroup[] | (() => BaseCommandGroup)[] | (string | boolean)[][]): CommandRegistry {
+	public registerGroups(groups: BaseCommandGroup[] | ((client: T) => BaseCommandGroup)[] | (string | boolean)[][]): CommandRegistry {
 		if (!Array.isArray(groups)) throw new TypeError('Groups must be an Array.');
 		for (let group of groups) {
-			const groupType: BaseCommandGroup = (group as BaseCommandGroup);
 			if (typeof group === 'function') {
-				group = group();
+				group = group(this.client);
 			} else if (Array.isArray(group)) {
-				group = new BaseCommandGroup(...group);
+				// TODO: Probably will never fix this, help pls
+				group = new BaseCommandGroup(this.client, ...group);
 			} else if (!(group instanceof BaseCommandGroup)) {
-				group = new BaseCommandGroup(groupType.id, groupType.name, null, groupType.cmds);
+				// TODO: Fix this hacky mess
+				group = (group as BaseCommandGroup);
+				group = new BaseCommandGroup(this.client, group.id, group.name, null, group.cmds);
 			}
 
-			const existing: BaseCommandGroup = this.groups.get(groupType.id);
+			// TODO: Fix this hacky mess
+			group = (group as BaseCommandGroup);
+
+			const existing: BaseCommandGroup = this.groups.get(group.id);
 			if (existing) {
-				existing.name = groupType.name;
-				this.client.emit('debug', `Group ${groupType.id} is already registered; renamed it to "${groupType.name}".`);
+				existing.name = group.name;
+				this.client.emit('debug', `Group ${group.id} is already registered; renamed it to "${group.name}".`);
 			} else {
-				this.groups.set(groupType.id, groupType);
+				this.groups.set(group.id, group);
 				/**
 				 * Emitted when a group is registered
 				 * @event UntitledClient#groupRegister
 				 * @param {BaseCommandGroup} group - Group that was registered
 				 * @param {CommandRegistry} registry - Registry that the group was registered to
 				 */
-				this.client.emit('groupRegister', groupType, this);
-				this.client.emit('debug', `Registered group ${groupType.id}.`);
+				this.client.emit('groupRegister', group, this);
+				this.client.emit('debug', `Registered group ${group.id}.`);
 			}
 		}
 		return this;
@@ -110,7 +123,7 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * @return {CommandRegistry}
 	 * @see {@link CommandRegistry#registerCommands}
 	 */
-	public registerCommand(command: BaseCommand | ((client: UntitledClient) => BaseCommand)): CommandRegistry {
+	public registerCommand(command: BaseCommand | ((client: T) => BaseCommand)): CommandRegistry {
 		return this.registerCommands([(command as BaseCommand)]);
 	}
 
@@ -119,44 +132,47 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * @param {BaseCommand[]|Function[]} commands - An array of Command instances or constructors
 	 * @return {CommandRegistry}
 	 */
-	public registerCommands(commands: BaseCommand[] | ((client: UntitledClient) => BaseCommand)[]): CommandRegistry {
+	public registerCommands(commands: BaseCommand[] | ((client: T) => BaseCommand)[]): CommandRegistry {
 		if (!Array.isArray(commands)) throw new TypeError('Commands must be an Array.');
-		for (let command of commands) {
-			if (typeof command === 'function') command = command(this.client);
+		for (const command of commands) {
+			for (let c of Object.values(command)) {
+				if (typeof c === 'function') c = new c(this.client);
 
-			// Verify that it's an actual command
-			if (!(command instanceof BaseCommand)) {
-				this.client.emit('warn', `Attempting to register an invalid command object: ${command}; skipping.`);
-				continue;
-			}
-
-			// Make sure there aren't any conflicts
-			if (this.commands.some((cmd: BaseCommand) => cmd.name === command.name || cmd.aliases.includes(command.name))) {
-				throw new Error(`A command with the name/alias "${command.name}" is already registered.`);
-			}
-			for (const alias of command.aliases) {
-				if (this.commands.some((cmd: BaseCommand) => cmd.name === alias || cmd.aliases.includes(alias))) {
-					throw new Error(`A command with the name/alias "${alias}" is already registered.`);
+				// Verify that it's an actual command
+				if (!(c instanceof BaseCommand)) {
+					this.client.emit('warn', `Attempting to register an invalid command object: ${command}; skipping.`);
+					continue;
 				}
-			}
-			const group: BaseCommandGroup = this.groups.find((grp: BaseCommandGroup) => grp.id === (command as BaseCommand).groupID);
-			if (!group) throw new Error(`Group "${command.groupID}" is not registered.`);
-			if (group.commands.some((cmd: BaseCommand) => cmd.memberName === (command as BaseCommand).memberName)) {
-				throw new Error(`A command with the member name "${command.memberName}" is already registered in ${group.id}`);
+
+				// Make sure there aren't any conflicts
+				if (this.commands.some((cmd: BaseCommand) => cmd.name === c.name || cmd.aliases.includes(c.name))) {
+					throw new Error(`A command with the name/alias "${c.name}" is already registered.`);
+				}
+				for (const alias of c.aliases) {
+					if (this.commands.some((cmd: BaseCommand) => cmd.name === alias || cmd.aliases.includes(alias))) {
+						throw new Error(`A command with the name/alias "${alias}" is already registered.`);
+					}
+				}
+				const group: BaseCommandGroup = this.groups.find((grp: BaseCommandGroup) => grp.id === (c as BaseCommand).groupID);
+				if (!group) throw new Error(`Group "${c.groupID}" is not registered.`);
+				if (group.commands.some((cmd: BaseCommand) => cmd.memberName === (c as BaseCommand).memberName)) {
+					throw new Error(`A command with the member name "${c.memberName}" is already registered in ${group.id}`);
+				}
+
+				// Add the command
+				c.group = group;
+				group.commands.set(c.name, c);
+				this.commands.set(c.name, c);
+				/**
+				 * Emitted when a command is registered
+				 * @event UntitledClient#commandRegister
+				 * @param {BaseCommand} command - Command that was registered
+				 * @param {CommandRegistry} registry - Registry that the command was registered to
+				 */
+				this.client.emit('commandRegister', c, this);
+				this.client.emit('debug', `Registered command ${group.id}:${c.memberName}.`);
 			}
 
-			// Add the command
-			command.group = group;
-			group.commands.set(command.name, command);
-			this.commands.set(command.name, command);
-			/**
-			 * Emitted when a command is registered
-			 * @event UntitledClient#commandRegister
-			 * @param {BaseCommand} command - Command that was registered
-			 * @param {CommandRegistry} registry - Registry that the command was registered to
-			 */
-			this.client.emit('commandRegister', command, this);
-			this.client.emit('debug', `Registered command ${group.id}:${command.memberName}.`);
 		}
 
 		return this;
@@ -186,7 +202,7 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * @return {CommandRegistry}
 	 * @see {@link CommandRegistry#registerTypes}
 	 */
-	public registerType(type: BaseArgumentType | (() => BaseArgumentType)): CommandRegistry {
+	public registerType(type: BaseArgumentType | ((client: T) => BaseArgumentType)): CommandRegistry {
 		return this.registerTypes([(type as BaseArgumentType)]);
 	}
 
@@ -195,30 +211,33 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * @param {BaseArgumentType[]|Function[]} types - An array of ArgumentType instances or constructors
 	 * @return {CommandRegistry}
 	 */
-	public registerTypes(types: BaseArgumentType[] | (() => BaseArgumentType)[]): CommandRegistry {
+	public registerTypes(types: BaseArgumentType[] | ((client: T) => BaseArgumentType)[]): CommandRegistry {
 		if (!Array.isArray(types)) throw new TypeError('Types must be an Array.');
-		for (let type of types) {
-			if (typeof type === 'function') type = type();
+		for (const type of types) {
+			for (let t of Object.values(type)) {
+				if (typeof t === 'function') t = new t(this.client);
 
-			// Verify that it's an actual type
-			if (!(type instanceof BaseArgumentType)) {
-				this.client.emit('warn', `Attempting to register an invalid argument type object: ${type}; skipping.`);
-				continue;
+				// Verify that it's an actual type
+				if (!(t instanceof BaseArgumentType)) {
+					this.client.emit('warn', `Attempting to register an invalid argument type object: ${t}; skipping.`);
+					continue;
+				}
+
+				// Make sure there aren't any conflicts
+				if (this.types.has(t.id)) throw new Error(`An argument type with the ID "${t.id}" is already registered.`);
+
+				// Add the type
+				this.types.set(t.id, t);
+				/**
+				 * Emitted when an argument type is registered
+				 * @event UntitledClient#typeRegister
+				 * @param {BaseArgumentType} type - Argument type that was registered
+				 * @param {CommandRegistry} registry - Registry that the type was registered to
+				 */
+				this.client.emit('typeRegister', t, this);
+				this.client.emit('debug', `Registered argument type ${t.id}.`);
 			}
 
-			// Make sure there aren't any conflicts
-			if (this.types.has(type.id)) throw new Error(`An argument type with the ID "${type.id}" is already registered.`);
-
-			// Add the type
-			this.types.set(type.id, type);
-			/**
-			 * Emitted when an argument type is registered
-			 * @event UntitledClient#typeRegister
-			 * @param {BaseArgumentType} type - Argument type that was registered
-			 * @param {CommandRegistry} registry - Registry that the type was registered to
-			 */
-			this.client.emit('typeRegister', type, this);
-			this.client.emit('debug', `Registered argument type ${type.id}.`);
 		}
 
 		return this;
@@ -272,7 +291,7 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	public registerDefaultCommands({ help = true, prefix = true, ping = true, eval_ = true, commandState = true } = {}): CommandRegistry {
 		if (help) this.registerCommand(require('./commands/util/help'));
 		if (prefix) this.registerCommand(require('./commands/util/prefix'));
-		if (ping) this.registerCommand(require('./commands/util/ping'));
+		if (ping) this.registerCommand(require('../commands/commands/util/ping'));
 		if (eval_) this.registerCommand(require('./commands/util/eval'));
 		if (commandState) {
 			this.registerCommands([

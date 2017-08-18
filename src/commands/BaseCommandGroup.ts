@@ -17,7 +17,7 @@ export class BaseCommandGroup<T extends UntitledClient = UntitledClient> {
 	 * @param {boolean} [guarded=false] - Whether the group should be protected from disabling
 	 * @param {BaseCommand[]} [cmds] - The commands that the group contains
 	 */
-	public constructor(id: string, name?: string, guarded: boolean = false, cmds: BaseCommand[] = null) {
+	public constructor(client: T, id: string, name?: string, guarded: boolean = false, cmds: BaseCommand[] = null) {
 		if (typeof id !== 'string') throw new TypeError('Group ID must be a string.');
 		if (id !== id.toLowerCase()) throw new Error('Group ID must be lowercase.');
 		if (cmds && !Array.isArray(cmds)) throw new TypeError('Group commands must be an Array of Commands.');
@@ -28,7 +28,7 @@ export class BaseCommandGroup<T extends UntitledClient = UntitledClient> {
 		 * @type {UntitledClient}
 		 * @readonly
 		 */
-		this.client = null;
+		this.client = client;
 
 		/**
 		 * ID of this group

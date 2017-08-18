@@ -3,8 +3,9 @@ import { GuildChannel, Util } from 'discord.js';
 
 export class ChannelArgumentType<T extends UntitledClient = UntitledClient> extends BaseArgumentType {
 	public readonly client: T;
-	public constructor() {
-		super('channel');
+
+	public constructor(client: T) {
+		super(client, 'channel');
 	}
 
 	public validate(value: string, msg: BaseMessage): boolean | string {

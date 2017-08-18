@@ -3,8 +3,9 @@ import { GuildMember, User, Util } from 'discord.js';
 
 export class UserArgumentType<T extends UntitledClient = UntitledClient> extends BaseArgumentType {
 	public readonly client: T;
-	public constructor() {
-		super('user');
+
+	public constructor(client: T) {
+		super(client, 'user');
 	}
 
 	public async validate(value: string, msg: BaseMessage): Promise<boolean | string | User> {

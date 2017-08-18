@@ -144,7 +144,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @param {UntitledClient} client - The client the command is for
 	 * @param {CommandInfo} info - The command information
 	 */
-	public constructor(client: UntitledClient, info: CommandInfo) {
+	public constructor(client: T, info: CommandInfo) {
 		(this.constructor as typeof BaseCommand).validateInfo(client, info);
 
 		/**
@@ -153,7 +153,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 		 * @type {UntitledClient}
 		 * @readonly
 		 */
-		this.client = null;
+		this.client = client;
 
 		/**
 		 * Name of this command
@@ -237,7 +237,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 		 * The argument collector for the command
 		 * @type {?BaseArgumentCollector}
 		 */
-		this.argsCollector = info.args ? new BaseArgumentCollector(info.args, info.argsPromptLimit) : null;
+		this.argsCollector = info.args ? new BaseArgumentCollector(this.client, info.args, info.argsPromptLimit) : null;
 		if (this.argsCollector && typeof info.format === 'undefined') {
 			this.format = this.argsCollector.args.reduce((prev, arg) => {
 				const wrapL: string = arg.default !== null ? '[' : '<';

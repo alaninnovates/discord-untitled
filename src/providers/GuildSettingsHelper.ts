@@ -8,14 +8,14 @@ export class GuildSettingsHelper<T extends UntitledClient = UntitledClient> {
 	/**
 	 * @param {?Guild} guild - Guild the settings are for
 	 */
-	public constructor(guild?: Guild) {
+	public constructor(client: T, guild?: Guild) {
 		/**
 		 * Client to use the provider of
 		 * @name GuildSettingsHelper#client
 		 * @type {UntitledClient}
 		 * @readonly
 		 */
-		this.client = null;
+		this.client = client;
 
 		/**
 		 * Guild the settings are for

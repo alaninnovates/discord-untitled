@@ -5,8 +5,8 @@ export class BooleanArgumentType<T extends UntitledClient = UntitledClient> exte
 	public truthy: Set<string>;
 	public falsy: Set<string>;
 
-	public constructor() {
-		super('boolean');
+	public constructor(client: T) {
+		super(client, 'boolean');
 		this.truthy = new Set(['true', 't', 'yes', 'y', 'on', 'enable', 'enabled', '1', '+']);
 		this.falsy = new Set(['false', 'f', 'no', 'n', 'off', 'disable', 'disabled', '0', '-']);
 	}

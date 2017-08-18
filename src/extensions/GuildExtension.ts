@@ -1,7 +1,7 @@
 import { UntitledClient, BaseCommand } from '../';
 import { GuildSettingsHelper } from '../providers/GuildSettingsHelper';
 import { CommandResolvable, CommandGroupResolvable } from '../client/Registry';
-import { Guild, User } from 'discord.js';
+import { Client, Guild, User } from 'discord.js';
 
 export class GuildExtension<T extends UntitledClient = UntitledClient> extends Guild {
 	public readonly client: T;
@@ -69,7 +69,7 @@ export class GuildExtension<T extends UntitledClient = UntitledClient> extends G
 		 * @type {GuildSettingsHelper}
 		 * @private
 		 */
-		if (!this._settings) this._settings = new GuildSettingsHelper(this);
+		if (!this._settings) this._settings = new GuildSettingsHelper(this.client);
 		return this._settings;
 	}
 

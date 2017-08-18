@@ -24,7 +24,7 @@ export class SequelizeProivder<T extends UntitledClient = UntitledClient> extend
 	private _listeners: Map<any, any>;
 	private _model: Sequelize.Model<object, object>;
 
-	public constructor(db: Sequelize.Sequelize) {
+	public constructor(client: T, db: Sequelize.Sequelize) {
 		super();
 
 		/**
@@ -33,7 +33,7 @@ export class SequelizeProivder<T extends UntitledClient = UntitledClient> extend
 		 * @type {UntitledClient}
 		 * @readonly
 		 */
-		this.client = null;
+		this.client = client;
 
 		this.db = db;
 

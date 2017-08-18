@@ -4,7 +4,7 @@ import { Message } from 'discord.js';
 
 export class ListGroupsCommand<T extends UntitledClient = UntitledClient> extends BaseCommand {
 	public readonly client: T;
-	public constructor(client: UntitledClient) {
+	public constructor(client: T) {
 		super(client, {
 			name: 'groups',
 			aliases: ['list-groups', 'show-groups'],

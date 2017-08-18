@@ -4,7 +4,7 @@ import { Collection, Message } from 'discord.js';
 
 export class ReloadCommandCommand<T extends UntitledClient = UntitledClient> extends BaseCommand {
 	public readonly client: T;
-	public constructor(client: UntitledClient) {
+	public constructor(client: T) {
 		super(client, {
 			name: 'reload',
 			aliases: ['reload-command'],

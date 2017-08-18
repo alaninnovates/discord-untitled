@@ -18,14 +18,14 @@ export class CommandDispatcher<T extends UntitledClient = UntitledClient> {
 	private _results: Map<string, BaseMessage>;
 	public _awaiting: Set<string>;
 
-	public constructor(registry: CommandRegistry) {
+	public constructor(client: T, registry: CommandRegistry) {
 		/**
 		 * Client this dispatcher handles messages for
 		 * @name CommandDispatcher#client
 		 * @type {UntitledClient}
 		 * @readonly
 		 */
-		this.client = null;
+		this.client = client;
 
 		/**
 		 * Registry this dispatcher uses
@@ -229,7 +229,7 @@ export class CommandDispatcher<T extends UntitledClient = UntitledClient> {
 			if (!command.patterns) continue;
 			for (const pattern of command.patterns) {
 				const matches: RegExpExecArray = pattern.exec(message.content);
-				if (matches) return new BaseMessage(message, command, null, matches);
+				if (matches) return new BaseMessage(this.client, message, command, null, matches);
 			}
 		}
 
@@ -253,9 +253,9 @@ export class CommandDispatcher<T extends UntitledClient = UntitledClient> {
 		const matches: RegExpExecArray = pattern.exec(message.content);
 		if (!matches) return null;
 		const commands: BaseCommand[] | Collection<string, BaseCommand> = this.registry.findCommands(matches[commandNameIndex], true);
-		if ((commands as BaseCommand[]).length !== 1 || !(commands as BaseCommand[])[0].defaultHandling) return new BaseMessage(message, null);
+		if ((commands as BaseCommand[]).length !== 1 || !(commands as BaseCommand[])[0].defaultHandling) return new BaseMessage(this.client, message, null);
 		const argString: string = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));
-		return new BaseMessage(message, (commands as BaseCommand[])[0], argString);
+		return new BaseMessage(this.client, message, (commands as BaseCommand[])[0], argString);
 	}
 
 	/**

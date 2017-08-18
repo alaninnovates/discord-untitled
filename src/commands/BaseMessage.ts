@@ -80,14 +80,14 @@ export class BaseMessage<T extends UntitledClient = UntitledClient> {
 	 * @param {string} [argString] - Argument string for the command
 	 * @param {?Array<string>} [patternMatches] - Command pattern matches (if from a pattern trigger)
 	 */
-	public constructor(message: Message, command: BaseCommand = null, argString: string = null, patternMatches: string[] = null) {
+	public constructor(client: T, message: Message, command: BaseCommand = null, argString: string = null, patternMatches: string[] = null) {
 		/**
 		 * Client that the message was sent from
 		 * @name BaseMessage#client
 		 * @type {UntitledClient}
 		 * @readonly
 		 */
-		this.client = null;
+		this.client = client;
 
 		/**
 		 * Message that triggers the command
@@ -315,7 +315,7 @@ export class BaseMessage<T extends UntitledClient = UntitledClient> {
 
 		// TODO: Proper v12 typings
 		content = (Util as any).resolveString(content);
-		const split: SplitOptions = (options.split as SplitOptions);
+		/* const split: SplitOptions = (options.split as SplitOptions) || {}; */
 
 		switch (type) {
 			case 'plain':

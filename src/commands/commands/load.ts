@@ -5,7 +5,7 @@ import * as fs from 'fs';
 
 export class LoadCommandCommand<T extends UntitledClient = UntitledClient> extends BaseCommand {
 	public readonly client: T;
-	public constructor(client: UntitledClient) {
+	public constructor(client: T) {
 		super(client, {
 			name: 'load',
 			aliases: ['load-command'],
