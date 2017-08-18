@@ -98,7 +98,7 @@ export class CommandDispatcher<T extends UntitledClient = UntitledClient> {
 	 * @return {Promise<void>}
 	 * @private
 	 */
-	private async handleMessage(message: Message, oldMessage?: Message) {
+	public async handleMessage(message: Message, oldMessage?: Message) {
 		if (!this.shouldHandleMessage(message, oldMessage)) return;
 
 		// Parse the message, and get the old result if it exists

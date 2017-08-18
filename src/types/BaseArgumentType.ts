@@ -1,4 +1,5 @@
 import { UntitledClient, BaseArgument, BaseMessage } from '../';
+import { GuildMember } from 'discord.js';
 
 export abstract class BaseArgumentType<T extends UntitledClient = UntitledClient> {
 	public readonly client: T;
@@ -31,10 +32,10 @@ export abstract class BaseArgumentType<T extends UntitledClient = UntitledClient
 	 * @param {string} value - Value to validate
 	 * @param {BaseMessage} msg - Message the value was obtained from
 	 * @param {BaseArgument} arg - Argument the value obtained from
-	 * @return {boolean|string|Promise<boolean|string>} Whether the value is valid, or an error message
+	 * @return {*|Promise<*>} Whether the value is valid, or an error message
 	 * @abstract
 	 */
-	public validate(value: string, msg: BaseMessage, arg: BaseArgument): boolean | string | Promise<boolean | string> {
+	public validate(value: string, msg: BaseMessage, arg: BaseArgument): any | Promise<any> {
 		throw new Error(`${this.constructor.name} doesn't have a validate() method.`);
 	}
 

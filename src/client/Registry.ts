@@ -303,15 +303,15 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 */
 	public registerDefaultTypes(): CommandRegistry {
 		this.registerTypes([
-			require('./types/string'),
-			require('./types/integer'),
-			require('./types/float'),
-			require('./types/boolean'),
-			require('./types/user'),
-			require('./types/member'),
-			require('./types/role'),
-			require('./types/channel'),
-			require('./types/message')
+			require('../types/BooleanType'),
+			require('../types/ChannelType'),
+			require('../types/FloatType'),
+			require('../types/IntegerType'),
+			require('../types/MemberType'),
+			require('../types/MessageType'),
+			require('../types/RoleType'),
+			require('../types/StringType'),
+			require('../types/UserType')
 		]);
 		return this;
 	}

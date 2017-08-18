@@ -9,11 +9,15 @@ export { BaseCommandGroup } from './commands/BaseCommandGroup';
 export { BaseMessage } from './commands/BaseMessage';
 export { BaseArgumentCollector } from './commands/BaseArgumentCollector';
 export { BaseArgument } from './commands/BaseArgument';
+export { BaseArgumentType } from './types/BaseArgumentType';
 export { FriendlyError } from './errors/FriendlyError';
 export { CommandFormatError } from './errors/CommandFormatError';
 
 export { BaseSettingProvider } from './providers/BaseSettingProvider';
 export { SequelizeProivder } from './providers/SequelizeProvider';
+
+export { disambiguation } from './utils/disambiguation';
+export { paginate } from './utils/paginate';
 
 GuildExtension.applyToClass(Guild);
 

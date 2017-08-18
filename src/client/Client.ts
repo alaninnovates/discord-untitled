@@ -162,7 +162,7 @@ export class UntitledClient extends Client {
 		return undefined;
 	}
 
-	private async destroy(): Promise<void> {
+	public async destroy(): Promise<void> {
 		super.destroy().then(() => this.provider ? this.provider.destroy() : undefined);
 	}
 }

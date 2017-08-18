@@ -322,7 +322,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @return {?Object}
 	 * @private
 	 */
-	private throttle(userID: Snowflake): object {
+	public throttle(userID: Snowflake): object {
 		if (!this.throttling || this.client.isOwner(userID)) return null;
 
 		let throttle: Throttle = this._throttles.get(userID);
