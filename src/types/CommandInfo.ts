@@ -1,11 +1,10 @@
-import { ArgumentInfo } from '.';
-import { ThrottlingOptions } from '.';
+import { ArgumentInfo, ThrottlingOptions } from '.';
 
 export type CommandInfo = {
 	name: string;
 	aliases?: string[];
 	autoAliases?: boolean;
-	group: string;
+	groupID: string;
 	memberName: string;
 	description: string;
 	format?: string;

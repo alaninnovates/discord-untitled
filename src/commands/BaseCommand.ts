@@ -1,24 +1,27 @@
 import { UntitledClient, BaseArgumentCollector, BaseCommandGroup, BaseMessage } from '../';
 import { GuildExtension } from '../extensions/GuildExtension';
-import { Throttle, ThrottlingOptions, CommandInfo } from '../types';
+import { Throttle, ThrottlingOptions, ArgumentInfo, CommandInfo } from '../types';
 import { GuildResolvable, Message, Snowflake, User, Guild } from 'discord.js';
 import * as path from 'path';
 
 export class BaseCommand<T extends UntitledClient = UntitledClient> {
-	public readonly client: T;
+	public client: T;
 	public name: string;
 	public aliases: string[];
+	public autoAliases: boolean;
 	public groupID: string;
-	public group?: BaseCommandGroup;
+	public group: BaseCommandGroup;
 	public memberName: string;
 	public description: string;
 	public format: string;
-	public details?: string;
-	public examples?: string[];
+	public details: string;
+	public examples: string[];
 	public guildOnly: boolean;
+	public throttling: ThrottlingOptions;
 	public defaultHandling: boolean;
-	public throttling?: ThrottlingOptions;
-	public argsCollector?: BaseArgumentCollector;
+	public args: ArgumentInfo[];
+	public argsCollector: BaseArgumentCollector;
+	public argsPromptLimit: number;
 	public argsType: string;
 	public argsCount: number;
 	public argsSingleQuotes: boolean;
@@ -57,54 +60,81 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @param {CommandInfo} info - Info to validate
 	 * @private
 	 */
-	private static validateInfo(client: UntitledClient, info: CommandInfo) { // eslint-disable-line complexity
-		if (!client) throw new Error('A client must be specified.');
-		if (typeof info !== 'object') throw new TypeError('Command info must be an Object.');
-		if (typeof info.name !== 'string') throw new TypeError('Command name must be a string.');
-		if (info.name !== info.name.toLowerCase()) throw new Error('Command name must be lowercase.');
-		if (info.aliases && (!Array.isArray(info.aliases) || info.aliases.some((ali: string) => typeof ali !== 'string'))) {
+	private validateInfo(): void {
+		if (typeof this.name !== 'string') throw new TypeError('Command name must be a string.');
+		if (this.name !== this.name.toLowerCase()) throw new Error('Command name must be lowercase.');
+		if (this.aliases && (!Array.isArray(this.aliases) || this.aliases.some((ali: string) => typeof ali !== 'string'))) {
 			throw new TypeError('Command aliases must be an Array of strings.');
 		}
-		if (info.aliases && info.aliases.some((ali: string) => ali !== ali.toLowerCase())) {
+		if (this.aliases && this.aliases.some((ali: string) => ali !== ali.toLowerCase())) {
 			throw new Error('Command aliases must be lowercase.');
 		}
-		if (typeof info.group !== 'string') throw new TypeError('Command group must be a string.');
-		if (info.group !== info.group.toLowerCase()) throw new Error('Command group must be lowercase.');
-		if (typeof info.memberName !== 'string') throw new TypeError('Command memberName must be a string.');
-		if (info.memberName !== info.memberName.toLowerCase()) throw new Error('Command memberName must be lowercase.');
-		if (typeof info.description !== 'string') throw new TypeError('Command description must be a string.');
-		if ('format' in info && typeof info.format !== 'string') throw new TypeError('Command format must be a string.');
-		if ('details' in info && typeof info.details !== 'string') throw new TypeError('Command details must be a string.');
-		if (info.examples && (!Array.isArray(info.examples) || info.examples.some((ex: string) => typeof ex !== 'string'))) {
+		if (typeof this.groupID !== 'string') throw new TypeError('Command group must be a string.');
+		if (this.groupID !== this.groupID.toLowerCase()) throw new Error('Command group must be lowercase.');
+		if (typeof this.memberName !== 'string') throw new TypeError('Command memberName must be a string.');
+		if (this.memberName !== this.memberName.toLowerCase()) throw new Error('Command memberName must be lowercase.');
+		if (typeof this.description !== 'string') throw new TypeError('Command description must be a string.');
+		if ('format' in this && typeof this.format !== 'string') throw new TypeError('Command format must be a string.');
+		if ('details' in this && typeof this.details !== 'string') throw new TypeError('Command details must be a string.');
+		if (this.examples && (!Array.isArray(this.examples) || this.examples.some((ex: string) => typeof ex !== 'string'))) {
 			throw new TypeError('Command examples must be an Array of strings.');
 		}
-		if (info.throttling) {
-			if (typeof info.throttling !== 'object') throw new TypeError('Command throttling must be an Object.');
-			if (typeof info.throttling.usages !== 'number' || isNaN(info.throttling.usages)) {
+		if (this.throttling) {
+			if (typeof this.throttling !== 'object') throw new TypeError('Command throttling must be an Object.');
+			if (typeof this.throttling.usages !== 'number' || isNaN(this.throttling.usages)) {
 				throw new TypeError('Command throttling usages must be a number.');
 			}
-			if (info.throttling.usages < 1) throw new RangeError('Command throttling usages must be at least 1.');
-			if (typeof info.throttling.duration !== 'number' || isNaN(info.throttling.duration)) {
+			if (this.throttling.usages < 1) throw new RangeError('Command throttling usages must be at least 1.');
+			if (typeof this.throttling.duration !== 'number' || isNaN(this.throttling.duration)) {
 				throw new TypeError('Command throttling duration must be a number.');
 			}
-			if (info.throttling.duration < 1) throw new RangeError('Command throttling duration must be at least 1.');
+			if (this.throttling.duration < 1) throw new RangeError('Command throttling duration must be at least 1.');
 		}
-		if (info.args && !Array.isArray(info.args)) throw new TypeError('Command args must be an Array.');
-		if ('argsPromptLimit' in info && typeof info.argsPromptLimit !== 'number') {
+		if (this.args && !Array.isArray(this.args)) throw new TypeError('Command args must be an Array.');
+		if ('argsPromptLimit' in this && typeof this.argsPromptLimit !== 'number') {
 			throw new TypeError('Command argsPromptLimit must be a number.');
 		}
-		if ('argsPromptLimit' in info && info.argsPromptLimit < 0) {
+		if ('argsPromptLimit' in this && this.argsPromptLimit < 0) {
 			throw new RangeError('Command argsPromptLimit must be at least 0.');
 		}
-		if (info.argsType && !['single', 'multiple'].includes(info.argsType)) {
+		if (this.argsType && !['single', 'multiple'].includes(this.argsType)) {
 			throw new RangeError('Command argsType must be one of "single" or "multiple".');
 		}
-		if (info.argsType === 'multiple' && info.argsCount && info.argsCount < 2) {
+		if (this.argsType === 'multiple' && this.argsCount && this.argsCount < 2) {
 			throw new RangeError('Command argsCount must be at least 2.');
 		}
-		if (info.patterns && (!Array.isArray(info.patterns) || info.patterns.some((pat: RegExp) => !(pat instanceof RegExp)))) {
+		if (this.patterns && (!Array.isArray(this.patterns) || this.patterns.some((pat: RegExp) => !(pat instanceof RegExp)))) {
 			throw new TypeError('Command patterns must be an Array of regular expressions.');
 		}
+	}
+
+	private cantThinkOfAName(client: T): void {
+		if (typeof this.aliases === 'undefined') this.aliases = [];
+		if (typeof this.autoAliases === 'undefined' || this.autoAliases) {
+			if (this.name.includes('-')) this.aliases.push(this.name.replace(/-/g, ''));
+			for (const alias of this.aliases) {
+				if (alias.includes('-')) this.aliases.push(alias.replace(/-/g, ''));
+			}
+		}
+		if (typeof this.format === 'undefined') this.format = null;
+		if (typeof this.details === 'undefined') this.details = null;
+		if (typeof this.examples === 'undefined') this.examples = null;
+		if (typeof this.guildOnly === 'undefined') this.guildOnly = false;
+		if (typeof this.defaultHandling === 'undefined') this.defaultHandling = true;
+		if (typeof this.throttling === 'undefined') this.throttling = null;
+		if (typeof this.args === 'undefined') this.argsCollector = null;
+		else this.argsCollector = new BaseArgumentCollector(client, this.args, this.argsPromptLimit);
+		if (this.argsCollector && typeof this.format === 'undefined') {
+			this.format = this.argsCollector.args.reduce((prev, arg) => {
+				const wrapL: string = arg.default !== null ? '[' : '<';
+				const wrapR: string = arg.default !== null ? ']' : '>';
+				return `${prev}${prev ? ' ' : ''}${wrapL}${arg.label}${arg.infinite ? '...' : ''}${wrapR}`;
+			}, '');
+		}
+		if (typeof this.argsType === 'undefined') this.argsType = 'single';
+		if (typeof this.argsCount === 'undefined') this.argsCount = 0;
+		if (typeof this.argsSingleQuotes === 'undefined') this.argsSingleQuotes = true;
+		if (typeof this.patterns === 'undefined') this.patterns = null;
 	}
 
 	/**
@@ -112,8 +142,9 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * @param {CommandInfo} info - The command information
 	 */
 	public constructor(client: T, info: CommandInfo) {
-		(this.constructor as typeof BaseCommand).validateInfo(client, info);
-
+		Object.assign(this, info);
+		this.validateInfo();
+		this.cantThinkOfAName(client);
 		/**
 		 * Client that this command is for
 		 * @name BaseCommand#client
@@ -126,25 +157,16 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 		 * Name of this command
 		 * @type {string}
 		 */
-		this.name = info.name;
 
 		/**
 		 * Aliases for this command
 		 * @type {string[]}
 		 */
-		this.aliases = info.aliases || [];
-		if (typeof info.autoAliases === 'undefined' || info.autoAliases) {
-			if (this.name.includes('-')) this.aliases.push(this.name.replace(/-/g, ''));
-			for (const alias of this.aliases) {
-				if (alias.includes('-')) this.aliases.push(alias.replace(/-/g, ''));
-			}
-		}
 
 		/**
 		 * ID of the group the command belongs to
 		 * @type {string}
 		 */
-		this.groupID = info.group;
 
 		/**
 		 * The group the command belongs to, assigned upon registration
@@ -156,92 +178,72 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 		 * Name of the command within the group
 		 * @type {string}
 		 */
-		this.memberName = info.memberName;
 
 		/**
 		 * Short description of the command
 		 * @type {string}
 		 */
-		this.description = info.description;
 
 		/**
 		 * Usage format string of the command
 		 * @type {string}
 		 */
-		this.format = info.format || null;
 
 		/**
 		 * Long description of the command
 		 * @type {?string}
 		 */
-		this.details = info.details || null;
 
 		/**
 		 * Example usage strings
 		 * @type {?string[]}
 		 */
-		this.examples = info.examples || null;
 
 		/**
 		 * Whether the command can only be run in a guild channel
 		 * @type {boolean}
 		 */
-		this.guildOnly = !!info.guildOnly;
 
 		/**
 		 * Whether the default command handling is enabled for the command
 		 * @type {boolean}
 		 */
-		this.defaultHandling = 'defaultHandling' in info ? info.defaultHandling : true;
 
 		/**
 		 * Options for throttling command usages
 		 * @type {?ThrottlingOptions}
 		 */
-		this.throttling = info.throttling || null;
 
 		/**
 		 * The argument collector for the command
 		 * @type {?BaseArgumentCollector}
 		 */
-		this.argsCollector = info.args ? new BaseArgumentCollector(this.client, info.args, info.argsPromptLimit) : null;
-		if (this.argsCollector && typeof info.format === 'undefined') {
-			this.format = this.argsCollector.args.reduce((prev, arg) => {
-				const wrapL: string = arg.default !== null ? '[' : '<';
-				const wrapR: string = arg.default !== null ? ']' : '>';
-				return `${prev}${prev ? ' ' : ''}${wrapL}${arg.label}${arg.infinite ? '...' : ''}${wrapR}`;
-			}, '');
-		}
 
 		/**
 		 * How the arguments are split when passed to the command's run method
 		 * @type {string}
 		 */
-		this.argsType = info.argsType || 'single';
 
 		/**
 		 * Maximum number of arguments that will be split
 		 * @type {number}
 		 */
-		this.argsCount = info.argsCount || 0;
 
 		/**
 		 * Whether single quotes are allowed to encapsulate an argument
 		 * @type {boolean}
 		 */
-		this.argsSingleQuotes = 'argsSingleQuotes' in info ? info.argsSingleQuotes : true;
 
 		/**
 		 * Regular expression triggers
 		 * @type {RegExp[]}
 		 */
-		this.patterns = info.patterns || null;
 
 		/**
 		 * Whether the command is protected from being disabled
 		 * @type {boolean}
 		 */
-		this.guarded = Boolean(info.guarded);
+		this.guarded = Boolean(this.guarded);
 
 		/**
 		 * Whether the command is enabled globally
@@ -333,7 +335,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	public isEnabledIn(guild: GuildResolvable): boolean {
 		if (this.guarded) return true;
 		if (!guild) return this.group._globalEnabled && this._globalEnabled;
-		guild = (this as any).client.resolver.resolveGuild(guild);
+		guild = (this.client as any).resolver.resolveGuild(guild);
 		return (guild as GuildExtension).isGroupEnabled(this.group) && (guild as GuildExtension).isCommandEnabled(this);
 	}
 

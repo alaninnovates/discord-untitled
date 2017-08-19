@@ -9,7 +9,6 @@ import {
 import { CommandResolvable, CommandGroupResolvable } from '../types';
 import { Collection, Message } from 'discord.js';
 import * as path from 'path';
-import * as util from 'util';
 
 export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	public readonly client: T;

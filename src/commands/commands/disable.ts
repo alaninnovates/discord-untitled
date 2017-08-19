@@ -8,7 +8,7 @@ export class DisableCommandCommand<T extends UntitledClient = UntitledClient> ex
 		super(client, {
 			name: 'disable',
 			aliases: ['disable-command', 'cmd-off', 'command-off'],
-			group: 'commands',
+			groupID: 'commands',
 			memberName: 'disable',
 			description: 'Disables a command or command group.',
 			details: oneLine`

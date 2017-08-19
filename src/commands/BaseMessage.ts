@@ -313,7 +313,7 @@ export class BaseMessage<T extends UntitledClient = UntitledClient> {
 
 		content = Util.resolveString(content);
 		let split: SplitOptions;
-		if (options.split) split = (options.split as SplitOptions) || {};
+		if (options && options.split) split = (options.split as SplitOptions) || {};
 
 		switch (type) {
 			case 'plain':

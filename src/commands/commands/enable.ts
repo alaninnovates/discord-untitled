@@ -8,7 +8,7 @@ export class EnableCommandCommand<T extends UntitledClient = UntitledClient> ext
 		super(client, {
 			name: 'enable',
 			aliases: ['enable-command', 'cmd-on', 'command-on'],
-			group: 'commands',
+			groupID: 'commands',
 			memberName: 'enable',
 			description: 'Enables a command or command group.',
 			details: oneLine`

@@ -9,9 +9,12 @@ export { BaseCommandGroup } from './commands/BaseCommandGroup';
 export { BaseMessage } from './commands/BaseMessage';
 export { BaseArgumentCollector } from './commands/BaseArgumentCollector';
 export { BaseArgument } from './commands/BaseArgument';
-export { BaseArgumentType } from './types/BaseArgumentType';
+export { BaseArgumentType } from './argumenttypes/BaseArgumentType';
 export { FriendlyError } from './errors/FriendlyError';
 export { CommandFormatError } from './errors/CommandFormatError';
+
+import * as BaseCommandDecorators from './commands/BaseCommandDecorators';
+export { BaseCommandDecorators };
 
 export { BaseSettingProvider } from './providers/BaseSettingProvider';
 export { SequelizeProivder } from './providers/SequelizeProvider';

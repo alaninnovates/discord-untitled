@@ -9,7 +9,7 @@ export class LoadCommandCommand<T extends UntitledClient = UntitledClient> exten
 		super(client, {
 			name: 'load',
 			aliases: ['load-command'],
-			group: 'commands',
+			groupID: 'commands',
 			memberName: 'load',
 			description: 'Loads a new command.',
 			details: oneLine`

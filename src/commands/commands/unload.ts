@@ -8,7 +8,7 @@ export class ReloadCommandCommand<T extends UntitledClient = UntitledClient> ext
 		super(client, {
 			name: 'unload',
 			aliases: ['unload-command'],
-			group: 'commands',
+			groupID: 'commands',
 			memberName: 'unload',
 			description: 'Unloads a command.',
 			details: oneLine`
