@@ -1,7 +1,14 @@
 # discord-untitled
 
 This is a fork of [discord.js-commando](https://github.com/Gawdl3y/discord.js-commando) completely rewritten in Typescript.
-As this is still in its early stage there are still some errors that need to be fixed before this is stable to use.
+
+## Features
+- Fully written in Typescript
+- Class and Method decorators
+
+## Installation
+**Node 8.0.0 or newer is required.**  
+`npm install iCrawl/discord-untitled`
 
 ## Commando description:
 
