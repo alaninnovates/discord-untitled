@@ -19,7 +19,7 @@ const { name, aliases, group, memberName, description, details, examples, guarde
 export class HelpCommand extends BaseCommand {
 	@args({
 		key: 'command',
-		prompt: 'Which command would you like to view the help for?',
+		prompt: 'which command would you like to view the help for?\n',
 		type: 'string',
 		default: ''
 	})
@@ -46,12 +46,12 @@ export class HelpCommand extends BaseCommand {
 				if (commandsType[0].details) help += `\n**Details:** ${commandsType[0].details}`;
 				if (commandsType[0].examples) help += `\n**Examples:**\n${commandsType[0].examples.join('\n')}`;
 
-				const messages = [];
+				const messages: Message[] = [];
 				try {
-					messages.push(await msg.direct(help));
-					if (msg.channel.type !== 'dm') messages.push(await msg.reply('sent you a DM with information.'));
+					messages.push((await msg.direct(help) as Message));
+					if (msg.channel.type !== 'dm') messages.push((await msg.reply('sent you a DM with information.') as Message));
 				} catch (err) {
-					messages.push(await msg.reply('unable to send you the help DM. You probably have DMs disabled.'));
+					messages.push((await msg.reply('unable to send you the help DM. You probably have DMs disabled.') as Message));
 				}
 				return (messages as Message[]);
 			} else if ((commands as BaseCommand[]).length > 1) {
@@ -64,9 +64,9 @@ export class HelpCommand extends BaseCommand {
 				);
 			}
 		} else {
-			const messages = [];
+			const messages: Message[] = [];
 			try {
-				messages.push(await msg.direct(stripIndents`
+				messages.push((await msg.direct(stripIndents`
 					${oneLine`
 						To run a command in ${msg.guild || 'any server'},
 						use ${BaseCommand.usage('command', msg.guild ? (msg.guild as GuildExtension).commandPrefix : null, this.client.user)}.
@@ -87,10 +87,10 @@ export class HelpCommand extends BaseCommand {
 							}
 						`).join('\n\n')
 					}
-				`, { split: true }));
-				if (msg.channel.type !== 'dm') messages.push(await msg.reply('sent you a DM with information.'));
+				`, { split: true }) as Message));
+				if (msg.channel.type !== 'dm') messages.push((await msg.reply('sent you a DM with information.') as Message));
 			} catch (err) {
-				messages.push(await msg.reply('unable to send you the help DM. You probably have DMs disabled.'));
+				messages.push((await msg.reply('unable to send you the help DM. You probably have DMs disabled.') as Message));
 			}
 			return (messages as Message[]);
 		}
