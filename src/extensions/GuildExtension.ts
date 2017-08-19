@@ -1,6 +1,6 @@
 import { UntitledClient, BaseCommand } from '../';
 import { GuildSettingsHelper } from '../providers/GuildSettingsHelper';
-import { CommandResolvable, CommandGroupResolvable } from '../client/Registry';
+import { CommandResolvable, CommandGroupResolvable } from '../types';
 import { Client, Guild, User } from 'discord.js';
 
 export class GuildExtension<T extends UntitledClient = UntitledClient> extends Guild {

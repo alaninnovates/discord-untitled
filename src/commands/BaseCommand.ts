@@ -1,41 +1,8 @@
 import { UntitledClient, BaseArgumentCollector, BaseCommandGroup, BaseMessage } from '../';
-import { ArgumentInfo } from './BaseArgument';
 import { GuildExtension } from '../extensions/GuildExtension';
+import { Throttle, ThrottlingOptions, CommandInfo } from '../types';
 import { GuildResolvable, Message, Snowflake, User, Guild } from 'discord.js';
 import * as path from 'path';
-
-export type Throttle = {
-	start?: number;
-	usages?: number;
-	timeout?: NodeJS.Timer
-};
-
-export type ThrottlingOptions = {
-	usages: number;
-	duration: number;
-};
-
-export type CommandInfo = {
-	name: string;
-	aliases?: string[];
-	autoAliases?: boolean;
-	group: string;
-	memberName: string;
-	description: string;
-	format?: string;
-	details?: string;
-	examples?: string[];
-	guildOnly?: boolean;
-	throttling?: ThrottlingOptions;
-	defaultHandling?: boolean;
-	args?: ArgumentInfo[];
-	argsPromptLimit?: number;
-	argsType?: string;
-	argsCount?: number;
-	argsSingleQuotes?: boolean;
-	patterns?: RegExp[];
-	guarded?: boolean;
-};
 
 export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	public readonly client: T;

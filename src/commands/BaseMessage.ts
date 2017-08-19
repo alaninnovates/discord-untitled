@@ -1,8 +1,6 @@
 import { UntitledClient, BaseCommand, BaseArgument, CommandFormatError, FriendlyError } from '../';
-import { UntitledClientOptions } from '../client/Client';
-import { Throttle, ThrottlingOptions } from './BaseCommand';
-import { ArgumentCollectorResult } from './BaseArgumentCollector';
 import { GuildExtension } from '../extensions/GuildExtension';
+import { UntitledClientOptions, Throttle, ArgumentCollectorResult } from '../types';
 import {
 	Channel,
 	Collection,
@@ -313,9 +311,9 @@ export class BaseMessage<T extends UntitledClient = UntitledClient> {
 			}
 		}
 
-		// TODO: Proper v12 typings
-		content = (Util as any).resolveString(content);
-		/* const split: SplitOptions = (options.split as SplitOptions) || {}; */
+		content = Util.resolveString(content);
+		let split: SplitOptions;
+		if (options.split) split = (options.split as SplitOptions) || {};
 
 		switch (type) {
 			case 'plain':

@@ -1,13 +1,6 @@
 import { UntitledClient, BaseArgument, BaseMessage } from '../';
 import { Message } from 'discord.js';
-import { ArgumentInfo } from './BaseArgument';
-
-export type ArgumentCollectorResult = {
-	values?: any;
-	cancelled?: string;
-	prompts: Message[];
-	answers: Message[];
-};
+import { ArgumentInfo, ArgumentCollectorResult } from '../types';
 
 export class BaseArgumentCollector<T extends UntitledClient = UntitledClient> {
 	public readonly client: T;

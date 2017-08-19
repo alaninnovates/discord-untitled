@@ -6,13 +6,10 @@ import {
 	BaseCommandGroup,
 	BaseMessage
 } from '../';
+import { CommandResolvable, CommandGroupResolvable } from '../types';
 import { Collection, Message } from 'discord.js';
 import * as path from 'path';
 import * as util from 'util';
-
-export type CommandResolvable = BaseCommand | BaseMessage | string;
-
-export type CommandGroupResolvable = BaseCommandGroup | string;
 
 export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	public readonly client: T;
@@ -87,8 +84,7 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 			if (typeof group === 'function') {
 				group = group(this.client);
 			} else if (Array.isArray(group)) {
-				// TODO: Probably will never fix this, help pls
-				group = new BaseCommandGroup(this.client, ...group);
+				group = new BaseCommandGroup(this.client, (group[0] as string), (group[1] as string), (group[2] as boolean));
 			} else if (!(group instanceof BaseCommandGroup)) {
 				// TODO: Fix this hacky mess
 				group = (group as BaseCommandGroup);

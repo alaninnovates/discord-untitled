@@ -1,27 +1,7 @@
 import { UntitledClient, BaseArgumentType, BaseMessage } from '../';
+import { ArgumentInfo, ArgumentResult } from '../types';
 import { Collection, Message, Util } from 'discord.js';
 import { oneLine, stripIndents } from 'common-tags';
-
-export type ArgumentInfo = {
-	key: string;
-	label?: string;
-	prompt: string;
-	type?: string;
-	max?: number;
-	min?: number;
-	default?: any;
-	infinite?: boolean;
-	validate?: (val: string, msg?: BaseMessage) => any | Promise<any>;
-	parse?: (val: string, msg?: BaseMessage) => any | Promise<any>;
-	wait?: number;
-};
-
-export type ArgumentResult = {
-	value?: any | any[];
-	cancelled?: 'user' | 'time' | 'promptLimit';
-	prompts: Message[];
-	answers: Message[];
-};
 
 export class BaseArgument {
 	public key: string;

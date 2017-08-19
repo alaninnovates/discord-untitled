@@ -8,10 +8,11 @@ import {
 import { CommandRegistry } from './Registry';
 import { CommandDispatcher } from './Dispatcher';
 import { GuildSettingsHelper } from '../providers/GuildSettingsHelper';
+import { UntitledClientOptions } from '../types';
 import {
 	Client,
-	ClientOptions,
 	ClientUserSettings,
+	ClientUserGuildSettings,
 	Collection,
 	Emoji,
 	Channel,
@@ -24,16 +25,6 @@ import {
 	User,
 	UserResolvable
 } from 'discord.js';
-
-export type UntitledClientOptions = {
-	selfbot?: boolean;
-	commandPrefix?: string;
-	commandEditableDuration?: number;
-	nonCommandEditable?: boolean;
-	unknownCommandResponse?: boolean;
-	owner?: string | string[] | Set<string>;
-	invite?: string;
-} & ClientOptions;
 
 export class UntitledClient extends Client {
 	public options: UntitledClientOptions;
@@ -191,6 +182,7 @@ export class UntitledClient extends Client {
 	public on(event: 'channelPinsUpdate', listener: (channel: Channel, time: Date) => void): this;
 	public on(event: 'channelUpdate', listener: (oldChannel: Channel, newChannel: Channel) => void): this;
 	public on(event: 'clientUserSettingsUpdate', listener: (clientUserSettings: ClientUserSettings) => void): this;
+	public on(event: 'clientUserGuildSettingsUpdate', listener: (clientUserGuildSettings: ClientUserGuildSettings) => void): this;
 	public on(event: 'debug' | 'warn', listener: (info: string) => void): this;
 	public on(event: 'disconnect', listener: (event: any) => void): this;
 	public on(event: 'emojiCreate | emojiDelete', listener: (emoji: Emoji) => void): this;
@@ -236,6 +228,7 @@ export class UntitledClient extends Client {
 	public once(event: 'channelPinsUpdate', listener: (channel: Channel, time: Date) => void): this;
 	public once(event: 'channelUpdate', listener: (oldChannel: Channel, newChannel: Channel) => void): this;
 	public once(event: 'clientUserSettingsUpdate', listener: (clientUserSettings: ClientUserSettings) => void): this;
+	public once(event: 'clientUserGuildSettingsUpdate', listener: (clientUserGuildSettings: ClientUserGuildSettings) => void): this;
 	public once(event: 'debug' | 'warn', listener: (info: string) => void): this;
 	public once(event: 'disconnect', listener: (event: any) => void): this;
 	public once(event: 'emojiCreate | emojiDelete', listener: (emoji: Emoji) => void): this;

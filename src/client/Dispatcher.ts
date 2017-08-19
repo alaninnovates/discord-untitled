@@ -1,14 +1,10 @@
 import { UntitledClient, BaseCommand, BaseMessage } from '../';
-import { UntitledClientOptions } from './Client';
 import { CommandRegistry } from './Registry';
 import { GuildExtension } from '../extensions/GuildExtension';
+import { UntitledClientOptions, CommandPatterns, Inhibitor } from '../types';
 import { Collection, Message } from 'discord.js';
 
 const escapeRegex = require('escape-string-regexp');
-
-export type CommandPatterns = { [index: string]: RegExp };
-
-export type Inhibitor = (msg: BaseMessage) => string | [string, Promise<any>];
 
 export class CommandDispatcher<T extends UntitledClient = UntitledClient> {
 	public readonly client: T;
