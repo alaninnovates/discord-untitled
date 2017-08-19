@@ -285,10 +285,10 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 * @return {CommandRegistry}
 	 */
 	public registerDefaultCommands({ help = true, prefix = true, ping = true, eval_ = true, commandState = true } = {}): CommandRegistry {
-		if (help) this.registerCommand(require('./commands/util/help'));
-		if (prefix) this.registerCommand(require('./commands/util/prefix'));
+		if (help) this.registerCommand(require('../commands/commands/util/help'));
+		if (prefix) this.registerCommand(require('../commands/commands/util/prefix'));
 		if (ping) this.registerCommand(require('../commands/commands/util/ping'));
-		if (eval_) this.registerCommand(require('./commands/util/eval'));
+		if (eval_) this.registerCommand(require('../commands/commands/util/eval'));
 		if (commandState) {
 			this.registerCommands([
 				require('../commands/commands/disable'),
@@ -317,15 +317,15 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	 */
 	public registerDefaultTypes(): CommandRegistry {
 		this.registerTypes([
-			require('../types/BooleanType'),
-			require('../types/ChannelType'),
-			require('../types/FloatType'),
-			require('../types/IntegerType'),
-			require('../types/MemberType'),
-			require('../types/MessageType'),
-			require('../types/RoleType'),
-			require('../types/StringType'),
-			require('../types/UserType')
+			require('../argumenttypes/BooleanType'),
+			require('../argumenttypes/ChannelType'),
+			require('../argumenttypes/FloatType'),
+			require('../argumenttypes/IntegerType'),
+			require('../argumenttypes/MemberType'),
+			require('../argumenttypes/MessageType'),
+			require('../argumenttypes/RoleType'),
+			require('../argumenttypes/StringType'),
+			require('../argumenttypes/UserType')
 		]);
 		return this;
 	}
