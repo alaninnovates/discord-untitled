@@ -88,6 +88,11 @@ export function guarded<T extends Function>(target: T): T {
 	return _setFlagMetaData('guarded', target);
 }
 
+// tslint:disable-next-line:no-shadowed-variable
+export function property(name: string, value: string): ClassDecorator {
+	return _setMetaData(name, value);
+}
+
 function _setFlagMetaData<T extends Function>(flag: string, target: T): T {
 	Object.defineProperty(target.prototype, flag, {
 		value: true,

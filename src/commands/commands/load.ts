@@ -23,7 +23,7 @@ export class LoadCommandCommand extends BaseCommand {
 
 	@args({
 		key: 'command',
-		prompt: 'Which command would you like to load?',
+		prompt: 'which command would you like to load?\n',
 		validate: (val: string) => new Promise(resolve => {
 			if (!val) return resolve(false);
 			const split: string[] = val.split(':');

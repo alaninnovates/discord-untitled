@@ -24,7 +24,7 @@ export class EnableCommandCommand extends BaseCommand {
 	@args({
 		key: 'cmdOrGrp',
 		label: 'command/group',
-		prompt: 'Which command or group would you like to enable?',
+		prompt: 'which command or group would you like to enable?\n',
 		validate: (val: string) => {
 			if (!val) return false;
 			const groups: Collection<string, BaseCommandGroup> | BaseCommandGroup[] = this.client.registry.findGroups(val);

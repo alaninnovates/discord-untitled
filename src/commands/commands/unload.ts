@@ -22,7 +22,7 @@ export class ReloadCommandCommand extends BaseCommand {
 
 	@args({
 		key: 'command',
-		prompt: 'Which command would you like to unload?',
+		prompt: 'which command would you like to unload?\n',
 		validate: (val: string) => {
 			if (!val) return false;
 			const commands: Collection<string, BaseCommand> | BaseCommand[] = this.client.registry.findCommands(val);

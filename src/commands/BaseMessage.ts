@@ -148,7 +148,7 @@ export class BaseMessage<T extends UntitledClient = UntitledClient> {
 	 * @param {User} [user=this.client.user] - User to use for the mention command format
 	 * @return {string}
 	 */
-	public anyUsage(command: string, prefix: string, user: User = this.client.user): string {
+	public anyUsage(command?: string, prefix?: string, user: User = this.client.user): string {
 		if (typeof prefix === 'undefined') {
 			if (this.message.guild) prefix = (this.message.guild as GuildExtension).commandPrefix;
 			else prefix = this.client.commandPrefix;
