@@ -56,8 +56,6 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 
 	/**
 	 * Validates the constructor parameters
-	 * @param {UntitledClient} client - Client to validate
-	 * @param {CommandInfo} info - Info to validate
 	 * @private
 	 */
 	private validateInfo(): void {
@@ -108,6 +106,11 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 		}
 	}
 
+	/**
+	 * TODO: Document properly
+	 * @param {UntitledClient} client - Client to validate
+	 * @private
+	 */
 	private cantThinkOfAName(client: T): void {
 		if (typeof this.aliases === 'undefined') this.aliases = [];
 		if (typeof this.autoAliases === 'undefined' || this.autoAliases) {
@@ -135,6 +138,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 		if (typeof this.argsCount === 'undefined') this.argsCount = 0;
 		if (typeof this.argsSingleQuotes === 'undefined') this.argsSingleQuotes = true;
 		if (typeof this.patterns === 'undefined') this.patterns = null;
+		if (typeof this.guarded === 'undefined') this.guarded = false;
 	}
 
 	/**
@@ -243,7 +247,6 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 		 * Whether the command is protected from being disabled
 		 * @type {boolean}
 		 */
-		this.guarded = Boolean(this.guarded);
 
 		/**
 		 * Whether the command is enabled globally
