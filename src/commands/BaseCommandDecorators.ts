@@ -88,6 +88,10 @@ export function guarded<T extends Function>(target: T): T {
 	return _setFlagMetaData('guarded', target);
 }
 
+/* export function args(...values: ArgumentInfo[]): ClassDecorator {
+	return _setMetaData('args', values);
+} */
+
 // tslint:disable-next-line:no-shadowed-variable
 export function property(name: string, value: string): ClassDecorator {
 	return _setMetaData(name, value);

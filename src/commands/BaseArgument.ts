@@ -12,8 +12,8 @@ export class BaseArgument {
 	public min?: number;
 	public default?: any;
 	public infinite?: boolean;
-	public validator?: (val: string, msg?: BaseMessage) => any | Promise<any>;
-	public parser?: (val: string, msg?: BaseMessage) => any | Promise<any>;
+	public validator?: (val: string, msg: BaseMessage, arg: BaseArgument) => any | Promise<any>;
+	public parser?: (val: string, msg: BaseMessage, arg: BaseArgument) => any | Promise<any>;
 	public wait?: number;
 
 	/**
@@ -319,7 +319,7 @@ export class BaseArgument {
 	 * @return {boolean|string|Promise<boolean|string>}
 	 */
 	public validate(value: string, msg: BaseMessage): any | Promise<any> {
-		if (this.validator) return this.validator(value, msg);
+		if (this.validator) return this.validator(value, msg, this);
 		return this.type.validate(value, msg, this);
 	}
 
@@ -330,7 +330,7 @@ export class BaseArgument {
 	 * @return {*|Promise<*>}
 	 */
 	public parse(value: string, msg: BaseMessage): any | Promise<any> {
-		if (this.parser) return this.parser(value, msg);
+		if (this.parser) return this.parser(value, msg, this);
 		return this.type.parse(value, msg, this);
 	}
 }

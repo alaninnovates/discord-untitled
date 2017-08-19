@@ -298,7 +298,7 @@ export class BaseMessage<T extends UntitledClient = UntitledClient> {
 	 * @return {Message|Message[]}
 	 * @private
 	 */
-	private async respond({ type = 'reply', content, options, lang, fromEdit = false }: RespondOptions): Promise<Message | Message[]> {
+	private respond({ type = 'reply', content, options, lang, fromEdit = false }: RespondOptions): Promise<Message | Message[]> {
 		const shouldEdit: boolean = this.responses && !fromEdit;
 		if (shouldEdit) {
 			if (options && options.split && typeof options.split !== 'object') options.split = {};

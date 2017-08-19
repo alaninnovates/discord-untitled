@@ -8,6 +8,8 @@ logs/
 # Authentication
 
 # Test files
+test/
+!test/**/*.ts
 
 # Miscellaneous
 .tmp/
