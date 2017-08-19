@@ -27,9 +27,9 @@ export class ReloadCommandCommand extends BaseCommand {
 		prompt: 'which command or group would you like to reload?\n',
 		validate: (val: string) => {
 			if (!val) return false;
-			const groups: BaseCommandGroup[] = (this.client.registry.findGroups(val) as BaseCommandGroup[]);
+			const groups: BaseCommandGroup[] = ((this as BaseCommand).client.registry.findGroups(val) as BaseCommandGroup[]);
 			if (groups.length === 1) return true;
-			const commands: BaseCommand[] = (this.client.registry.findCommands(val) as BaseCommand[]);
+			const commands: BaseCommand[] = ((this as BaseCommand).client.registry.findCommands(val) as BaseCommand[]);
 			if (commands.length === 1) return true;
 			if (commands.length === 0 && groups.length === 0) return false;
 			return stripIndents`
@@ -37,7 +37,7 @@ export class ReloadCommandCommand extends BaseCommand {
 				${groups.length > 1 ? disambiguation(groups, 'groups') : ''}
 			`;
 		},
-		parse: (val: string) => (this.client.registry.findGroups(val) as BaseCommandGroup[])[0] || (this.client.registry.findCommands(val) as BaseCommand[])[0]
+		parse: (val: string) => ((this as BaseCommand).client.registry.findGroups(val) as BaseCommandGroup[])[0] || ((this as BaseCommand).client.registry.findCommands(val) as BaseCommand[])[0]
 	})
 	public async run(msg: BaseMessage, { cmdOrGrp }: { cmdOrGrp: BaseCommand | BaseCommandGroup }): Promise<Message | Message[]> {
 		cmdOrGrp.reload();

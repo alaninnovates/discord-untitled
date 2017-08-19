@@ -28,16 +28,16 @@ export class LoadCommandCommand extends BaseCommand {
 			if (!val) return resolve(false);
 			const split: string[] = val.split(':');
 			if (split.length !== 2) return resolve(false);
-			if ((this.client.registry.findCommands(val) as BaseCommand[]).length > 0) {
+			if (((this as BaseCommand).client.registry.findCommands(val) as BaseCommand[]).length > 0) {
 				return resolve('That command is already registered.');
 			}
-			const cmdPath: string = this.client.registry.resolveCommandPath(split[0], split[1]);
+			const cmdPath: string = (this as BaseCommand).client.registry.resolveCommandPath(split[0], split[1]);
 			fs.access(cmdPath, fs.constants.R_OK, (err: Error) => err ? resolve(false) : resolve(true));
 			return null;
 		}),
 		parse: (val: string) => {
 			const split: string[] = val.split(':');
-			const cmdPath: string = this.client.registry.resolveCommandPath(split[0], split[1]);
+			const cmdPath: string = (this as BaseCommand).client.registry.resolveCommandPath(split[0], split[1]);
 			delete require.cache[cmdPath];
 			return require(cmdPath);
 		}

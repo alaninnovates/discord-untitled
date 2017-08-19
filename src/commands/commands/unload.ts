@@ -25,12 +25,12 @@ export class ReloadCommandCommand extends BaseCommand {
 		prompt: 'which command would you like to unload?\n',
 		validate: (val: string) => {
 			if (!val) return false;
-			const commands: BaseCommand[] = (this.client.registry.findCommands(val) as BaseCommand[]);
+			const commands: BaseCommand[] = ((this as BaseCommand).client.registry.findCommands(val) as BaseCommand[]);
 			if (commands.length === 1) return true;
 			if (commands.length === 0) return false;
 			return disambiguation(commands, 'commands');
 		},
-		parse: (val: string) => (this.client.registry.findCommands(val) as BaseCommand[])[0]
+		parse: (val: string) => ((this as BaseCommand).client.registry.findCommands(val) as BaseCommand[])[0]
 	})
 	public async run(msg: BaseMessage, { command }: { command: BaseCommand }): Promise<Message | Message[]> {
 		command.unload();
