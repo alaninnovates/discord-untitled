@@ -55,93 +55,6 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	}
 
 	/**
-	 * Validates the constructor parameters
-	 * @private
-	 */
-	private validateInfo(): void {
-		if (typeof this.name !== 'string') throw new TypeError('Command name must be a string.');
-		if (this.name !== this.name.toLowerCase()) throw new Error('Command name must be lowercase.');
-		if (this.aliases && (!Array.isArray(this.aliases) || this.aliases.some((ali: string) => typeof ali !== 'string'))) {
-			throw new TypeError('Command aliases must be an Array of strings.');
-		}
-		if (this.aliases && this.aliases.some((ali: string) => ali !== ali.toLowerCase())) {
-			throw new Error('Command aliases must be lowercase.');
-		}
-		if (typeof this.groupID !== 'string') throw new TypeError('Command group must be a string.');
-		if (this.groupID !== this.groupID.toLowerCase()) throw new Error('Command group must be lowercase.');
-		if (typeof this.memberName !== 'string') throw new TypeError('Command memberName must be a string.');
-		if (this.memberName !== this.memberName.toLowerCase()) throw new Error('Command memberName must be lowercase.');
-		if (typeof this.description !== 'string') throw new TypeError('Command description must be a string.');
-		if ('format' in this && typeof this.format !== 'string') throw new TypeError('Command format must be a string.');
-		if ('details' in this && typeof this.details !== 'string') throw new TypeError('Command details must be a string.');
-		if (this.examples && (!Array.isArray(this.examples) || this.examples.some((ex: string) => typeof ex !== 'string'))) {
-			throw new TypeError('Command examples must be an Array of strings.');
-		}
-		if (this.throttling) {
-			if (typeof this.throttling !== 'object') throw new TypeError('Command throttling must be an Object.');
-			if (typeof this.throttling.usages !== 'number' || isNaN(this.throttling.usages)) {
-				throw new TypeError('Command throttling usages must be a number.');
-			}
-			if (this.throttling.usages < 1) throw new RangeError('Command throttling usages must be at least 1.');
-			if (typeof this.throttling.duration !== 'number' || isNaN(this.throttling.duration)) {
-				throw new TypeError('Command throttling duration must be a number.');
-			}
-			if (this.throttling.duration < 1) throw new RangeError('Command throttling duration must be at least 1.');
-		}
-		if (this.args && !Array.isArray(this.args)) throw new TypeError('Command args must be an Array.');
-		if ('argsPromptLimit' in this && typeof this.argsPromptLimit !== 'number') {
-			throw new TypeError('Command argsPromptLimit must be a number.');
-		}
-		if ('argsPromptLimit' in this && this.argsPromptLimit < 0) {
-			throw new RangeError('Command argsPromptLimit must be at least 0.');
-		}
-		if (this.argsType && !['single', 'multiple'].includes(this.argsType)) {
-			throw new RangeError('Command argsType must be one of "single" or "multiple".');
-		}
-		if (this.argsType === 'multiple' && this.argsCount && this.argsCount < 2) {
-			throw new RangeError('Command argsCount must be at least 2.');
-		}
-		if (this.patterns && (!Array.isArray(this.patterns) || this.patterns.some((pat: RegExp) => !(pat instanceof RegExp)))) {
-			throw new TypeError('Command patterns must be an Array of regular expressions.');
-		}
-	}
-
-	/**
-	 * TODO: Document properly
-	 * @param {UntitledClient} client - Client to validate
-	 * @private
-	 */
-	private cantThinkOfAName(client: T): void {
-		if (typeof this.aliases === 'undefined') this.aliases = [];
-		if (typeof this.autoAliases === 'undefined' || this.autoAliases) {
-			if (this.name.includes('-')) this.aliases.push(this.name.replace(/-/g, ''));
-			for (const alias of this.aliases) {
-				if (alias.includes('-')) this.aliases.push(alias.replace(/-/g, ''));
-			}
-		}
-		if (typeof this.format === 'undefined') this.format = null;
-		if (typeof this.details === 'undefined') this.details = null;
-		if (typeof this.examples === 'undefined') this.examples = null;
-		if (typeof this.guildOnly === 'undefined') this.guildOnly = false;
-		if (typeof this.defaultHandling === 'undefined') this.defaultHandling = true;
-		if (typeof this.throttling === 'undefined') this.throttling = null;
-		if (typeof this.args === 'undefined') this.argsCollector = null;
-		else this.argsCollector = new BaseArgumentCollector(client, this.args, this.argsPromptLimit);
-		if (this.argsCollector && typeof this.format === 'undefined') {
-			this.format = this.argsCollector.args.reduce((prev, arg) => {
-				const wrapL: string = arg.default !== null ? '[' : '<';
-				const wrapR: string = arg.default !== null ? ']' : '>';
-				return `${prev}${prev ? ' ' : ''}${wrapL}${arg.label}${arg.infinite ? '...' : ''}${wrapR}`;
-			}, '');
-		}
-		if (typeof this.argsType === 'undefined') this.argsType = 'single';
-		if (typeof this.argsCount === 'undefined') this.argsCount = 0;
-		if (typeof this.argsSingleQuotes === 'undefined') this.argsSingleQuotes = true;
-		if (typeof this.patterns === 'undefined') this.patterns = null;
-		if (typeof this.guarded === 'undefined') this.guarded = false;
-	}
-
-	/**
 	 * @param {UntitledClient} client - The client the command is for
 	 * @param {CommandInfo} info - The command information
 	 */
@@ -261,6 +174,93 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 		 * @private
 		 */
 		this._throttles = new Map();
+	}
+
+	/**
+	 * Validates the constructor parameters
+	 * @private
+	 */
+	private validateInfo(): void {
+		if (typeof this.name !== 'string') throw new TypeError('Command name must be a string.');
+		if (this.name !== this.name.toLowerCase()) throw new Error('Command name must be lowercase.');
+		if (this.aliases && (!Array.isArray(this.aliases) || this.aliases.some((ali: string) => typeof ali !== 'string'))) {
+			throw new TypeError('Command aliases must be an Array of strings.');
+		}
+		if (this.aliases && this.aliases.some((ali: string) => ali !== ali.toLowerCase())) {
+			throw new Error('Command aliases must be lowercase.');
+		}
+		if (typeof this.groupID !== 'string') throw new TypeError('Command group must be a string.');
+		if (this.groupID !== this.groupID.toLowerCase()) throw new Error('Command group must be lowercase.');
+		if (typeof this.memberName !== 'string') throw new TypeError('Command memberName must be a string.');
+		if (this.memberName !== this.memberName.toLowerCase()) throw new Error('Command memberName must be lowercase.');
+		if (typeof this.description !== 'string') throw new TypeError('Command description must be a string.');
+		if ('format' in this && typeof this.format !== 'string') throw new TypeError('Command format must be a string.');
+		if ('details' in this && typeof this.details !== 'string') throw new TypeError('Command details must be a string.');
+		if (this.examples && (!Array.isArray(this.examples) || this.examples.some((ex: string) => typeof ex !== 'string'))) {
+			throw new TypeError('Command examples must be an Array of strings.');
+		}
+		if (this.throttling) {
+			if (typeof this.throttling !== 'object') throw new TypeError('Command throttling must be an Object.');
+			if (typeof this.throttling.usages !== 'number' || isNaN(this.throttling.usages)) {
+				throw new TypeError('Command throttling usages must be a number.');
+			}
+			if (this.throttling.usages < 1) throw new RangeError('Command throttling usages must be at least 1.');
+			if (typeof this.throttling.duration !== 'number' || isNaN(this.throttling.duration)) {
+				throw new TypeError('Command throttling duration must be a number.');
+			}
+			if (this.throttling.duration < 1) throw new RangeError('Command throttling duration must be at least 1.');
+		}
+		if (this.args && !Array.isArray(this.args)) throw new TypeError('Command args must be an Array.');
+		if ('argsPromptLimit' in this && typeof this.argsPromptLimit !== 'number') {
+			throw new TypeError('Command argsPromptLimit must be a number.');
+		}
+		if ('argsPromptLimit' in this && this.argsPromptLimit < 0) {
+			throw new RangeError('Command argsPromptLimit must be at least 0.');
+		}
+		if (this.argsType && !['single', 'multiple'].includes(this.argsType)) {
+			throw new RangeError('Command argsType must be one of "single" or "multiple".');
+		}
+		if (this.argsType === 'multiple' && this.argsCount && this.argsCount < 2) {
+			throw new RangeError('Command argsCount must be at least 2.');
+		}
+		if (this.patterns && (!Array.isArray(this.patterns) || this.patterns.some((pat: RegExp) => !(pat instanceof RegExp)))) {
+			throw new TypeError('Command patterns must be an Array of regular expressions.');
+		}
+	}
+
+	/**
+	 * TODO: Document properly
+	 * @param {UntitledClient} client - Client to validate
+	 * @private
+	 */
+	private cantThinkOfAName(client: T): void {
+		if (typeof this.aliases === 'undefined') this.aliases = [];
+		if (typeof this.autoAliases === 'undefined' || this.autoAliases) {
+			if (this.name.includes('-')) this.aliases.push(this.name.replace(/-/g, ''));
+			for (const alias of this.aliases) {
+				if (alias.includes('-')) this.aliases.push(alias.replace(/-/g, ''));
+			}
+		}
+		if (typeof this.format === 'undefined') this.format = null;
+		if (typeof this.details === 'undefined') this.details = null;
+		if (typeof this.examples === 'undefined') this.examples = null;
+		if (typeof this.guildOnly === 'undefined') this.guildOnly = false;
+		if (typeof this.defaultHandling === 'undefined') this.defaultHandling = true;
+		if (typeof this.throttling === 'undefined') this.throttling = null;
+		if (typeof this.args === 'undefined') this.argsCollector = null;
+		else this.argsCollector = new BaseArgumentCollector(client, this.args, this.argsPromptLimit);
+		if (this.argsCollector && typeof this.format === 'undefined') {
+			this.format = this.argsCollector.args.reduce((prev, arg) => {
+				const wrapL: string = arg.default !== null ? '[' : '<';
+				const wrapR: string = arg.default !== null ? ']' : '>';
+				return `${prev}${prev ? ' ' : ''}${wrapL}${arg.label}${arg.infinite ? '...' : ''}${wrapR}`;
+			}, '');
+		}
+		if (typeof this.argsType === 'undefined') this.argsType = 'single';
+		if (typeof this.argsCount === 'undefined') this.argsCount = 0;
+		if (typeof this.argsSingleQuotes === 'undefined') this.argsSingleQuotes = true;
+		if (typeof this.patterns === 'undefined') this.patterns = null;
+		if (typeof this.guarded === 'undefined') this.guarded = false;
 	}
 
 	/**

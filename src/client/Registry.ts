@@ -422,8 +422,8 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 	public resolveGroup(group: CommandGroupResolvable): BaseCommandGroup {
 		if (group instanceof BaseCommandGroup) return group;
 		if (typeof group === 'string') {
-			const groups: BaseCommandGroup[] | Collection<string, BaseCommandGroup> = this.findGroups(group, true);
-			if ((groups as BaseCommandGroup[]).length === 1) return (groups as BaseCommandGroup[])[0];
+			const groups: BaseCommandGroup[] = (this.findGroups(group, true) as BaseCommandGroup[]);
+			if (groups.length === 1) return groups[0];
 		}
 		throw new Error('Unable to resolve group.');
 	}
@@ -464,8 +464,8 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 		if (command instanceof BaseCommand) return command;
 		if (command instanceof BaseMessage) return command.command;
 		if (typeof command === 'string') {
-			const commands: BaseCommand[] | Collection<string, BaseCommand> = this.findCommands(command, true);
-			if ((commands as BaseCommand[]).length === 1) return (commands as BaseCommand[])[0];
+			const commands: BaseCommand[] = (this.findCommands(command, true) as BaseCommand[]);
+			if (commands.length === 1) return commands[0];
 		}
 		throw new Error('Unable to resolve command.');
 	}

@@ -25,10 +25,10 @@ export class ReloadCommandCommand extends BaseCommand {
 		prompt: 'which command would you like to unload?\n',
 		validate: (val: string) => {
 			if (!val) return false;
-			const commands: Collection<string, BaseCommand> | BaseCommand[] = this.client.registry.findCommands(val);
-			if ((commands as BaseCommand[]).length === 1) return true;
-			if ((commands as BaseCommand[]).length === 0) return false;
-			return disambiguation((commands as BaseCommand[]), 'commands');
+			const commands: BaseCommand[] = (this.client.registry.findCommands(val) as BaseCommand[]);
+			if (commands.length === 1) return true;
+			if (commands.length === 0) return false;
+			return disambiguation(commands, 'commands');
 		},
 		parse: (val: string) => (this.client.registry.findCommands(val) as BaseCommand[])[0]
 	})

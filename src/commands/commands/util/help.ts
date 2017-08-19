@@ -25,26 +25,25 @@ export class HelpCommand extends BaseCommand {
 	})
 	public async run(msg: BaseMessage, { command }: { command: string }): Promise<Message | Message[]> {
 		const groups: Collection<string, BaseCommandGroup> = this.client.registry.groups;
-		const commands: Collection<string, BaseCommand> | BaseCommand[] = this.client.registry.findCommands(command, false, msg);
+		const commands: BaseCommand[] = (this.client.registry.findCommands(command, false, msg) as BaseCommand[]);
 		const showAll: boolean = command && command.toLowerCase() === 'all';
 		if (command && !showAll) {
-			if ((commands as BaseCommand[]).length === 1) {
-				const commandsType: BaseCommand[] = (commands as BaseCommand[]);
+			if (commands.length === 1) {
 				let help: string = stripIndents`
 					${oneLine`
-						__Command **${commandsType[0].name}**:__ ${commandsType[0].description}
-						${commandsType[0].guildOnly ? ' (Usable only in servers)' : ''}
+						__Command **${commands[0].name}**:__ ${commands[0].description}
+						${commands[0].guildOnly ? ' (Usable only in servers)' : ''}
 					`}
 
-					**Format:** ${msg.anyUsage(`${commandsType[0].name}${commandsType[0].format ? ` ${commandsType[0].format}` : ''}`)}
+					**Format:** ${msg.anyUsage(`${commands[0].name}${commands[0].format ? ` ${commands[0].format}` : ''}`)}
 				`;
-				if (commandsType[0].aliases.length > 0) help += `\n**Aliases:** ${commandsType[0].aliases.join(', ')}`;
+				if (commands[0].aliases.length > 0) help += `\n**Aliases:** ${commands[0].aliases.join(', ')}`;
 				help += `\n${oneLine`
-					**Group:** ${commandsType[0].group.name}
-					(\`${commandsType[0].groupID}:${commandsType[0].memberName}\`)
+					**Group:** ${commands[0].group.name}
+					(\`${commands[0].groupID}:${commands[0].memberName}\`)
 				`}`;
-				if (commandsType[0].details) help += `\n**Details:** ${commandsType[0].details}`;
-				if (commandsType[0].examples) help += `\n**Examples:**\n${commandsType[0].examples.join('\n')}`;
+				if (commands[0].details) help += `\n**Details:** ${commands[0].details}`;
+				if (commands[0].examples) help += `\n**Examples:**\n${commands[0].examples.join('\n')}`;
 
 				const messages: Message[] = [];
 				try {

@@ -248,10 +248,10 @@ export class CommandDispatcher<T extends UntitledClient = UntitledClient> {
 	private matchDefault(message: Message, pattern: RegExp, commandNameIndex: number = 1): BaseMessage {
 		const matches: RegExpExecArray = pattern.exec(message.content);
 		if (!matches) return null;
-		const commands: BaseCommand[] | Collection<string, BaseCommand> = this.registry.findCommands(matches[commandNameIndex], true);
-		if ((commands as BaseCommand[]).length !== 1 || !(commands as BaseCommand[])[0].defaultHandling) return new BaseMessage(this.client, message, null);
+		const commands: BaseCommand[] = (this.registry.findCommands(matches[commandNameIndex], true) as BaseCommand[]);
+		if (commands.length !== 1 || !commands[0].defaultHandling) return new BaseMessage(this.client, message, null);
 		const argString: string = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));
-		return new BaseMessage(this.client, message, (commands as BaseCommand[])[0], argString);
+		return new BaseMessage(this.client, message, commands[0], argString);
 	}
 
 	/**

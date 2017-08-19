@@ -27,14 +27,14 @@ export class ReloadCommandCommand extends BaseCommand {
 		prompt: 'which command or group would you like to reload?\n',
 		validate: (val: string) => {
 			if (!val) return false;
-			const groups: Collection<string, BaseCommandGroup> | BaseCommandGroup[] = this.client.registry.findGroups(val);
-			if ((groups as BaseCommandGroup[]).length === 1) return true;
-			const commands: Collection<string, BaseCommand> | BaseCommand[] = this.client.registry.findCommands(val);
-			if ((commands as BaseCommand[]).length === 1) return true;
-			if ((commands as BaseCommand[]).length === 0 && (groups as BaseCommandGroup[]).length === 0) return false;
+			const groups: BaseCommandGroup[] = (this.client.registry.findGroups(val) as BaseCommandGroup[]);
+			if (groups.length === 1) return true;
+			const commands: BaseCommand[] = (this.client.registry.findCommands(val) as BaseCommand[]);
+			if (commands.length === 1) return true;
+			if (commands.length === 0 && groups.length === 0) return false;
 			return stripIndents`
-				${(commands as BaseCommand[]).length > 1 ? disambiguation((commands as BaseCommand[]), 'commands') : ''}
-				${(groups as BaseCommandGroup[]).length > 1 ? disambiguation((groups as BaseCommandGroup[]), 'groups') : ''}
+				${commands.length > 1 ? disambiguation(commands, 'commands') : ''}
+				${groups.length > 1 ? disambiguation(groups, 'groups') : ''}
 			`;
 		},
 		parse: (val: string) => (this.client.registry.findGroups(val) as BaseCommandGroup[])[0] || (this.client.registry.findCommands(val) as BaseCommand[])[0]

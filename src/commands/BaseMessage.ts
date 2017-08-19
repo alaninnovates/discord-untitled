@@ -779,18 +779,6 @@ export class BaseMessage<T extends UntitledClient = UntitledClient> {
 	}
 
 	/**
-	 * Shortcut to `this.message.editCode(content)`
-	 * @param {string} lang - Language for the code block
-	 * @param {StringResolvable} content - New content for the message
-	 * @returns {Promise<Message>}
-	 * @see {@link Message#editCode}
-	 * @readonly
-	 */
-	public editCode(lang: string, content: StringResolvable) {
-		return this.message.editCode(lang, content);
-	}
-
-	/**
 	 * Shortcut to `this.message.react()`
 	 * @param {string|Emoji|ReactionEmoji} emoji - Emoji to react with
 	 * @returns {Promise<MessageReaction>}
