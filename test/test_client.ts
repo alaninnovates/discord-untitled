@@ -3,10 +3,12 @@ import {
 	FriendlyError,
 	BaseCommand,
 	BaseCommandGroup,
+	BaseCommandDecorators,
 	BaseMessage
 } from '../dist';
-import { Guild } from 'discord.js';
+import { Guild, Message } from 'discord.js';
 import { oneLine } from 'common-tags';
+import * as path from 'path';
 
 const client = new UntitledClient({
 	owner: '81440962496172032',
@@ -45,6 +47,7 @@ client
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`);
 	})
+	// tslint:disable-next-line:no-shadowed-variable
 	.on('groupStatusChange', (guild: Guild, group: BaseCommandGroup, enabled: boolean): void => {
 		console.log(oneLine`
 			Group ${group.id}
@@ -56,6 +59,7 @@ client
 client.registry
 	.registerDefaultTypes()
 	.registerDefaultGroups()
-	.registerDefaultCommands({ eval_: false, help: false, prefix: false });
+	.registerDefaultCommands()
+	.registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.login(token);

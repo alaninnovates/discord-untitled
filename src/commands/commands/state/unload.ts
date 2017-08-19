@@ -1,4 +1,4 @@
-import { UntitledClient, BaseCommand, BaseCommandGroup, BaseCommandDecorators, BaseMessage, disambiguation } from '../../';
+import { UntitledClient, BaseCommand, BaseCommandGroup, BaseCommandDecorators, BaseMessage, disambiguation } from '../../../';
 import { oneLine, stripIndents } from 'common-tags';
 import { Collection, Message } from 'discord.js';
 

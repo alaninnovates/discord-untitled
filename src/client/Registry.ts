@@ -148,9 +148,9 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 						throw new Error(`A command with the name/alias "${alias}" is already registered.`);
 					}
 				}
-				const group: BaseCommandGroup = this.groups.find((grp: BaseCommandGroup) => grp.id === (c as BaseCommand).groupID);
+				const group: BaseCommandGroup = this.groups.find((grp: BaseCommandGroup) => grp.id === c.groupID);
 				if (!group) throw new Error(`Group "${c.groupID}" is not registered.`);
-				if (group.commands.some((cmd: BaseCommand) => cmd.memberName === (c as BaseCommand).memberName)) {
+				if (group.commands.some((cmd: BaseCommand) => cmd.memberName === c.memberName)) {
 					throw new Error(`A command with the member name "${c.memberName}" is already registered in ${group.id}`);
 				}
 
@@ -290,12 +290,12 @@ export class CommandRegistry<T extends UntitledClient = UntitledClient> {
 		if (eval_) this.registerCommand(require('../commands/commands/util/eval'));
 		if (commandState) {
 			this.registerCommands([
-				require('../commands/commands/disable'),
-				require('../commands/commands/enable'),
-				require('../commands/commands/groups'),
-				require('../commands/commands/load'),
-				require('../commands/commands/reload'),
-				require('../commands/commands/unload')
+				require('../commands/commands/state/disable'),
+				require('../commands/commands/state/enable'),
+				require('../commands/commands/state/groups'),
+				require('../commands/commands/state/load'),
+				require('../commands/commands/state/reload'),
+				require('../commands/commands/state/unload')
 			]);
 		}
 		return this;

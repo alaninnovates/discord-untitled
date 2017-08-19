@@ -1,0 +1,27 @@
+{
+	"version": "0.1.0",
+	"command": "gulp",
+	"isShellCommand": true,
+	"tasks": [
+		{
+			"taskName": "build:vscode",
+			"args": [],
+			"isBuildCommand": true,
+			"isBackground": false,
+			"problemMatcher": ["$tsc"]
+		},
+		{
+			"taskName": "tests",
+			"args": ["tests"],
+			"command": "gulp",
+			"isShellCommand": true,
+			"problemMatcher": ["$tsc"]
+		},
+		{
+			"taskName": "docs",
+			"args": ["docs"],
+			"command": "gulp",
+			"isShellCommand": true
+		}
+	]
+}

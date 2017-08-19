@@ -11,6 +11,8 @@ logs/
 
 # Miscellaneous
 .tmp/
-.vscode/
+.vscode/bookmarks.json
+!.vscode/launch.json
+!.vscode/tasks.json
 dist/
 package-lock.json
