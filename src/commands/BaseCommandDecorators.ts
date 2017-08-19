@@ -1,4 +1,20 @@
+import { UntitledClient, BaseCommand } from '../';
 import { ArgumentInfo, ThrottlingOptions } from '../types/index';
+
+export function args(...values: ArgumentInfo[]) {
+	return function(target: BaseCommand<UntitledClient>, key: string, descriptor: PropertyDescriptor): PropertyDescriptor {
+		if (!target) throw new Error('y u do this;');
+		if (key !== 'run') throw new Error('y u do this;²');
+		if (!descriptor) descriptor = Object.getOwnPropertyDescriptor(target, key);
+		Object.defineProperty(Object.getPrototypeOf(target), 'args', {
+			value: values,
+			configurable: true,
+			enumerable: true,
+			writable: true
+		});
+		return descriptor;
+	};
+}
 
 export function name(value: string): ClassDecorator {
 	return _setMetaData('name', value);
@@ -46,10 +62,6 @@ export function throttling(value: ThrottlingOptions): ClassDecorator {
 
 export function defaultHandling<T extends Function>(target: T): T {
 	return _setFlagMetaData('defaultHandling', target);
-}
-
-export function args(...values: ArgumentInfo[]): ClassDecorator {
-	return _setMetaData('args', values);
 }
 
 export function argsPromptLimit(value: number): ClassDecorator {

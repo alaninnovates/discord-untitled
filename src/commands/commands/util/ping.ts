@@ -2,14 +2,14 @@ import { UntitledClient, BaseCommand, BaseCommandGroup, BaseCommandDecorators, B
 import { oneLine } from 'common-tags';
 import { Message } from 'discord.js';
 
-@BaseCommandDecorators.name('ping')
-@BaseCommandDecorators.group('util')
-@BaseCommandDecorators.memberName('ping')
-@BaseCommandDecorators.description('Checks the bot\'s ping to the Discord server.')
-@BaseCommandDecorators.throttling({ usages: 5, duration: 10 })
-export class ListGroupsCommand<T extends UntitledClient = UntitledClient> extends BaseCommand {
-	public readonly client: T;
+const { name, group, memberName, description, throttling } = BaseCommandDecorators;
 
+@name('ping')
+@group('util')
+@memberName('ping')
+@description('Checks the bot\'s ping to the Discord server.')
+@throttling({ usages: 5, duration: 10 })
+export class PingCommand extends BaseCommand {
 	public async run(msg: BaseMessage): Promise<Message | Message[]> {
 		if (!msg.editable) {
 			const pingMsg = await msg.reply('Pinging...');
