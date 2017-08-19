@@ -25,7 +25,7 @@ export function aliases(...values: string[]): ClassDecorator {
 }
 
 export function autoAliases<T extends Function>(target: T): T {
-	return _setFlagMetaData('aliases', target);
+	return _setFlagMetaData(target, 'autoAliases');
 }
 
 export function group(value: string): ClassDecorator {
@@ -53,7 +53,7 @@ export function examples(...values: string[]): ClassDecorator {
 }
 
 export function guildOnly<T extends Function>(target: T): T {
-	return _setFlagMetaData('guildOnly', target);
+	return _setFlagMetaData(target, 'guildOnly');
 }
 
 export function throttling(value: ThrottlingOptions): ClassDecorator {
@@ -61,7 +61,7 @@ export function throttling(value: ThrottlingOptions): ClassDecorator {
 }
 
 export function defaultHandling<T extends Function>(target: T): T {
-	return _setFlagMetaData('defaultHandling', target);
+	return _setFlagMetaData(target, 'defaultHandling');
 }
 
 export function argsPromptLimit(value: number): ClassDecorator {
@@ -77,7 +77,7 @@ export function argsCount(value: number): ClassDecorator {
 }
 
 export function argsSingleQuotes<T extends Function>(target: T): T {
-	return _setFlagMetaData('argsSingleQuotes', target);
+	return _setFlagMetaData(target, 'argsSingleQuotes');
 }
 
 export function patterns(...values: RegExp[]): ClassDecorator {
@@ -85,7 +85,7 @@ export function patterns(...values: RegExp[]): ClassDecorator {
 }
 
 export function guarded<T extends Function>(target: T): T {
-	return _setFlagMetaData('guarded', target);
+	return _setFlagMetaData(target, 'guarded');
 }
 
 /* export function args(...values: ArgumentInfo[]): ClassDecorator {
@@ -97,7 +97,7 @@ export function property(name: string, value: string): ClassDecorator {
 	return _setMetaData(name, value);
 }
 
-function _setFlagMetaData<T extends Function>(flag: string, target: T): T {
+function _setFlagMetaData<T extends Function>(target: T, flag: string): T {
 	Object.defineProperty(target.prototype, flag, {
 		value: true,
 		enumerable: true
