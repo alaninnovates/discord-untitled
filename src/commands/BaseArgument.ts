@@ -136,7 +136,7 @@ export class BaseArgument {
 	public async obtain(msg: BaseMessage, value: string, promptLimit: number = Infinity): Promise<ArgumentResult> {
 		if (!value && this.default !== null) {
 			return {
-				value: this.default,
+				values: this.default,
 				cancelled: null,
 				prompts: [],
 				answers: []
@@ -152,7 +152,7 @@ export class BaseArgument {
 		while (!valid || typeof valid === 'string') {
 			if (prompts.length >= promptLimit) {
 				return {
-					value: null,
+					values: null,
 					cancelled: 'promptLimit',
 					prompts,
 					answers
@@ -177,7 +177,7 @@ export class BaseArgument {
 				value = answers[answers.length - 1].content;
 			} else {
 				return {
-					value: null,
+					values: null,
 					cancelled: 'time',
 					prompts,
 					answers
@@ -186,7 +186,7 @@ export class BaseArgument {
 
 			if (value.toLowerCase() === 'cancel') {
 				return {
-					value: null,
+					values: null,
 					cancelled: 'user',
 					prompts,
 					answers
@@ -197,7 +197,7 @@ export class BaseArgument {
 		}
 
 		return {
-			value: await this.parse(value, msg),
+			values: await this.parse(value, msg),
 			cancelled: null,
 			prompts,
 			answers
@@ -228,7 +228,7 @@ export class BaseArgument {
 				attempts++;
 				if (attempts > promptLimit) {
 					return {
-						value: null,
+						values: null,
 						cancelled: 'promptLimit',
 						prompts,
 						answers
@@ -268,7 +268,7 @@ export class BaseArgument {
 					value = answers[answers.length - 1].content;
 				} else {
 					return {
-						value: null,
+						values: null,
 						cancelled: 'time',
 						prompts,
 						answers
@@ -278,7 +278,7 @@ export class BaseArgument {
 				const lc: string = value.toLowerCase();
 				if (lc === 'finish') {
 					return {
-						value: results.length > 0 ? results : null,
+						values: results.length > 0 ? results : null,
 						cancelled: results.length > 0 ? null : 'user',
 						prompts,
 						answers
@@ -286,7 +286,7 @@ export class BaseArgument {
 				}
 				if (lc === 'cancel') {
 					return {
-						value: null,
+						values: null,
 						cancelled: 'user',
 						prompts,
 						answers
@@ -302,7 +302,7 @@ export class BaseArgument {
 				currentVal++;
 				if (currentVal === values.length) {
 					return {
-						value: results,
+						values: results,
 						cancelled: null,
 						prompts,
 						answers

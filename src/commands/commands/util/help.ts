@@ -47,10 +47,10 @@ export class HelpCommand extends BaseCommand {
 
 				const messages: Message[] = [];
 				try {
-					messages.push((await msg.direct(help) as Message));
-					if (msg.channel.type !== 'dm') messages.push((await msg.reply('sent you a DM with information.') as Message));
+					messages.push((await msg.say(help) as Message));
+					/* if (msg.channel.type !== 'dm') messages.push((await msg.reply('sent you a DM with information.') as Message)); */
 				} catch (err) {
-					messages.push((await msg.reply('unable to send you the help DM. You probably have DMs disabled.') as Message));
+					/* messages.push((await msg.reply('unable to send you the help DM. You probably have DMs disabled.') as Message)); */
 				}
 				return (messages as Message[]);
 			} else if ((commands as BaseCommand[]).length > 1) {

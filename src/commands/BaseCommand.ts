@@ -276,7 +276,7 @@ export class BaseCommand<T extends UntitledClient = UntitledClient> {
 	 * Runs the command
 	 * @param {BaseMessage} message - The message the command is being run for
 	 * @param {Object|string|string[]} args - The arguments for the command, or the matches from a pattern.
-	 * If args is specified on the command, thise will be the argument values object. If argsType is single, then only
+	 * If args is specified on the command, this will be the argument values object. If argsType is single, then only
 	 * one string will be passed. If multiple, an array of strings will be passed. When fromPattern is true, this is the
 	 * matches array from the pattern match
 	 * (see [RegExp#exec](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec)).

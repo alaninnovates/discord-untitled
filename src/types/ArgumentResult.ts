@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 
 export type ArgumentResult = {
-	value?: any | any[];
+	values?: any | any[];
 	cancelled?: 'user' | 'time' | 'promptLimit';
 	prompts: Message[];
 	answers: Message[];

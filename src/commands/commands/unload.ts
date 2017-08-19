@@ -15,7 +15,7 @@ const { name, aliases, group, memberName, description, details, examples, guarde
 `)
 @examples('unload some-command')
 @guarded
-export class ReloadCommandCommand extends BaseCommand {
+export class UnloadCommandCommand extends BaseCommand {
 	public hasPermission(msg: BaseMessage): boolean {
 		return this.client.isOwner(msg.author);
 	}
