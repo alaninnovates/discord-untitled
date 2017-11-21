@@ -1,40 +1,40 @@
 {
-  "name": "discord-untitled",
-  "version": "0.1.0",
-  "description": "untitled discord framework",
-  "author": {
-    "name": "iCrawl",
-    "email": "icrawltogo@gmail.com"
-  },
-  "license": "MIT",
-  "scripts": {
-    "build": "gulp",
-    "lint": "gulp lint",
-    "pkg": "gulp pkg",
-    "test": "npm run lint -s && npm run build -s",
-    "test:client": "node test/test_client.js"
-  },
-  "dependencies": {
-    "common-tags": "^1.0.0",
-    "discord.js": "hydrabolt/discord.js",
-    "escape-string-regexp": "^1.0.0",
-    "pg": "^6.0.0",
-    "pg-hstore": "^2.0.0",
-    "require-all": "^2.0.0",
-    "sequelize": "^4.0.0",
-    "source-map-support": "^0.4.0"
-  },
-  "devDependencies": {
-    "@types/common-tags": "^1.0.0",
-    "@types/node": "^8.0.0",
-    "@types/sequelize": "^4.0.0",
-    "del": "^3.0.0",
-    "gulp": "^3.0.0",
-    "gulp-sourcemaps": "^2.0.0",
-    "gulp-tslint": "^8.0.0",
-    "gulp-typescript": "^3.0.0",
-    "run-sequence": "^2.0.0",
-    "tslint": "^5.0.0",
-    "typescript": "^2.0.0"
-  }
+	"name": "discord-untitled",
+	"version": "0.1.0",
+	"description": "untitled discord framework",
+	"author": {
+		"name": "iCrawl",
+		"email": "icrawltogo@gmail.com"
+	},
+	"license": "MIT",
+	"scripts": {
+		"build": "gulp",
+		"lint": "gulp lint",
+		"pkg": "gulp pkg",
+		"test": "npm run lint -s && npm run build -s",
+		"test:client": "node test/test_client.js"
+	},
+	"dependencies": {
+		"common-tags": "^1.0.0",
+		"discord.js": "hydrabolt/discord.js",
+		"escape-string-regexp": "^1.0.0",
+		"pg": "^6.0.0",
+		"pg-hstore": "^2.0.0",
+		"require-all": "^2.0.0",
+		"sequelize": "^4.0.0",
+		"source-map-support": "^0.5.0"
+	},
+	"devDependencies": {
+		"@types/common-tags": "^1.0.0",
+		"@types/node": "^8.0.0",
+		"@types/sequelize": "^4.0.0",
+		"del": "^3.0.0",
+		"gulp": "^3.0.0",
+		"gulp-sourcemaps": "^2.0.0",
+		"gulp-tslint": "^8.0.0",
+		"gulp-typescript": "^3.0.0",
+		"run-sequence": "^2.0.0",
+		"tslint": "^5.0.0",
+		"typescript": "^2.0.0"
+	}
 }
